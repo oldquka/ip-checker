@@ -5,18 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Your IP Address</title>
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
-
-  <!-- SEO Meta Tags -->
-  <meta name="description" content="Free tool to instantly check your public IP address and related info. Simple, fast, privacy-friendly.">
-  <meta name="keywords" content="IP checker, check IP address, IP lookup, find IP, IP tool, public IP, geolocation, ASN, ISP, IPv4, IPv6">
-  <meta name="author" content="IP Checker Tool">
-  <meta name="robots" content="index, follow">
-  <meta property="og:title" content="Check Your IP Address">
-  <meta property="og:description" content="Instantly view your public IP address. No tracking, no nonsense.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://ip-checker-xyz.pages.dev">
-  <meta property="og:image" content="https://ip-checker-xyz.pages.dev/social-preview.png">
-
   <style>
     body {
       margin: 0;
@@ -39,31 +27,39 @@
       background-color: #f9f9f9;
       color: #000;
       margin: 20px 0;
-      padding: 15px;
+      padding: 10px;
       border-radius: 8px;
       font-size: 14px;
+      text-align: center;
+      min-height: 100px;
+      max-width: 100%;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      margin-bottom: 15px;
+      margin-top: 10px;
     }
 
     .ip-display {
       font-size: 2rem;
       font-weight: bold;
       color: #00ffcc;
-      margin: 30px 0;
+      margin: 15px 0;
       min-height: 40px;
     }
 
     .info-block {
-      margin-top: 20px;
+      margin-top: 10px;
     }
 
     .info-item {
       font-size: 1.5rem;
-      margin: 16px 0;
+      margin: 12px 0;
     }
 
     .info-label {
       color: #fff;
-      font-weight: normal;
     }
 
     .info-value {
@@ -75,22 +71,22 @@
       width: 66%;
       height: 1px;
       background-color: #00ffcc;
-      margin: 20px auto;
+      margin: 12px auto;
     }
 
     .buttons {
-      margin-top: 30px;
+      margin-top: 20px;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     button {
       background-color: #006e52;
       border: none;
       color: white;
-      padding: 12px 20px;
+      padding: 10px 18px;
       font-size: 1rem;
       border-radius: 6px;
       cursor: pointer;
@@ -127,7 +123,7 @@
       background-color: #333;
       border-radius: 4px;
       overflow: hidden;
-      margin: 20px auto 10px;
+      margin: 10px auto;
       display: none;
     }
 
@@ -148,7 +144,7 @@
         font-size: 1.6rem;
       }
       .info-item {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
       }
       button {
         width: 100%;
@@ -159,29 +155,19 @@
 <body>
   <div class="container">
     <div class="ad-slot" id="ad-top">[Top Ad Placeholder]</div>
-
     <h1>Your IP Address is:</h1>
-
-    <div id="loading-bar-container">
-      <div id="loading-bar"></div>
-    </div>
-
+    <div id="loading-bar-container"><div id="loading-bar"></div></div>
     <div id="ip" class="ip-display" style="display: none;"></div>
-
     <div id="info-output" class="info-block"></div>
-
     <div class="buttons">
       <button onclick="loadInfo('location', this)">Show Location</button>
       <button onclick="loadInfo('isp', this)">Show ISP Info</button>
       <button onclick="loadInfo('asn', this)">Show ASN</button>
       <button onclick="loadInfo('timezone', this)">Show Timezone</button>
     </div>
-
     <div class="ad-slot" id="ad-bottom">[Bottom Ad Placeholder]</div>
   </div>
-
   <div class="footer-ad" id="ad-footer">[Sticky Footer Ad Placeholder]</div>
-
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       document.getElementById('loading-bar-container').style.display = 'block';
