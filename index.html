@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Your IP Address</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <style>
     body {
       margin: 0;
@@ -22,6 +23,18 @@
       text-align: center;
     }
 
+    .ad-slot {
+      background-color: #f9f9f9;
+      color: #000;
+      margin: 20px 0;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 14px;
+      text-align: center;
+      min-height: 100px;
+      max-width: 100%;
+    }
+
     h1 {
       font-size: 1.4rem;
       margin-bottom: 15px;
@@ -32,6 +45,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-wrap: nowrap;
       gap: 10px;
       margin: 15px 0;
     }
@@ -51,6 +65,7 @@
       border-radius: 6px;
       cursor: pointer;
       transition: background-color 0.3s;
+      transform: translateY(3px);
     }
 
     .copy-btn:hover {
@@ -58,11 +73,11 @@
     }
 
     .info-block {
-      margin-top: 20px;
+      margin-top: 10px;
     }
 
     .info-item {
-      font-size: 1.2rem;
+      font-size: 1.5rem;
       margin: 12px 0;
     }
 
@@ -106,8 +121,6 @@
       border-radius: 6px;
       cursor: pointer;
       transition: background-color 0.3s;
-      width: 140px;
-      white-space: nowrap;
     }
 
     .buttons button:disabled {
@@ -157,21 +170,39 @@
     }
 
     @media (max-width: 600px) {
+      .ip-display-wrapper {
+        justify-content: center;
+        gap: 8px;
+      }
+
       .ip-display {
         font-size: 1.6rem;
       }
+
       .info-item {
-        font-size: 1.2rem;
+        font-size: 0.99rem;
       }
+
+      .buttons {
+        gap: 10px;
+      }
+
+      .buttons button {
+        width: 140px;
+      }
+
       .copy-btn {
+        transform: translateY(0);
         font-size: 0.85rem;
         padding: 6px 10px;
+        white-space: nowrap;
       }
     }
   </style>
 </head>
 <body>
   <div class="container">
+    <div class="ad-slot" id="ad-top">[Top Ad Placeholder]</div>
     <h1>Your IP Address is:</h1>
     <div id="loading-bar-container"><div id="loading-bar"></div></div>
     <div class="ip-display-wrapper">
@@ -185,7 +216,9 @@
       <button onclick="loadInfo('asn', this)">Show ASN</button>
       <button onclick="loadInfo('timezone', this)">Show Timezone</button>
     </div>
+    <div class="ad-slot" id="ad-bottom">[Bottom Ad Placeholder]</div>
   </div>
+  <div class="footer-ad" id="ad-footer">[Sticky Footer Ad Placeholder]</div>
   <script>
     function copyIP() {
       const ipText = document.getElementById('ip').textContent;
@@ -212,6 +245,8 @@
           })
           .catch(() => {
             document.getElementById('ip').textContent = 'Error loading IP';
+            document.getElementById('loading-bar-container').style.display = 'none';
+            document.getElementById('ip').style.display = 'block';
           });
       }, 1000);
     });
@@ -226,6 +261,7 @@
           .then(res => res.json())
           .then(data => {
             let output = '';
+
             switch (type) {
               case 'location':
                 output += `<div class="info-item"><span class="info-label">Country: </span><span class="info-value">${data.country}<img class="flag" src="https://flagsapi.com/${data.country_code}/flat/32.png" alt="${data.country} flag"></span></div>`;
@@ -243,6 +279,7 @@
                 output += `<div class="info-item"><span class="info-label">Timezone: </span><span class="info-value">${data.timezone}</span></div>`;
                 break;
             }
+
             const divider = document.createElement('div');
             divider.className = 'divider';
             document.getElementById('info-output').appendChild(divider);
