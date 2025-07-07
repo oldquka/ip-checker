@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -189,6 +190,9 @@
 
       .buttons button {
         width: 140px;
+        font-size: 0.88rem;
+        padding: 8px 10px;
+        white-space: nowrap;
       }
 
       .copy-btn {
@@ -261,7 +265,6 @@
           .then(res => res.json())
           .then(data => {
             let output = '';
-
             switch (type) {
               case 'location':
                 output += `<div class="info-item"><span class="info-label">Country: </span><span class="info-value">${data.country}<img class="flag" src="https://flagsapi.com/${data.country_code}/flat/32.png" alt="${data.country} flag"></span></div>`;
