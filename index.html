@@ -71,7 +71,13 @@
       transition: background-color 0.3s;
     }
 
-    button:hover {
+    button:disabled {
+      background-color: #444;
+      cursor: default;
+      opacity: 0.6;
+    }
+
+    button:hover:not(:disabled) {
       background-color: #009e75;
     }
 
@@ -79,6 +85,7 @@
       margin-top: 20px;
       font-size: 1rem;
       color: #ccc;
+      min-height: 24px;
     }
 
     .footer-ad {
@@ -94,7 +101,6 @@
       border-top: 1px solid #ddd;
     }
 
-    /* Loading bar styles */
     #loading-bar-container {
       width: 100%;
       max-width: 400px;
@@ -102,7 +108,8 @@
       background-color: #333;
       border-radius: 4px;
       overflow: hidden;
-      margin: 30px auto;
+      margin: 20px auto;
+      display: none;
     }
 
     #loading-bar {
@@ -139,14 +146,14 @@
 
     <div id="ip" class="ip-display" style="display: none;"></div>
 
-    <div class="buttons">
-      <button onclick="loadInfo('geo')">Show Location</button>
-      <button onclick="loadInfo('isp')">Show ISP Info</button>
-      <button onclick="loadInfo('asn')">Show ASN</button>
-      <button onclick="loadInfo('timezone')">Show Timezone</button>
-    </div>
-
     <div id="info-output" class="info-block"></div>
+
+    <div class="buttons">
+      <button onclick="loadInfo('location', this)">Show Location</button>
+      <button onclick="loadInfo('isp', this)">Show ISP Info</button>
+      <button onclick="loadInfo('asn', this)">Show ASN</button>
+      <button onclick="loadInfo('timezone', this)">Show Timezone</button>
+    </div>
 
     <div class="ad-slot" id="ad-bottom">[Bottom Ad Placeholder]</div>
   </div>
@@ -154,8 +161,9 @@
   <div class="footer-ad" id="ad-footer">[Sticky Footer Ad Placeholder]</div>
 
   <script>
-    // Load IP with delay for loading effect
+    // Initial IP load
     window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('loading-bar-container').style.display = 'block';
       setTimeout(() => {
         fetch('https://api.ipify.org?format=json')
           .then(res => res.json())
@@ -173,32 +181,39 @@
     });
 
     // Load extra info on demand
-    function loadInfo(type) {
-      const output = document.getElementById('info-output');
-      output.textContent = 'Loading ' + type + '...';
+    function loadInfo(type, button) {
+      document.getElementById('loading-bar').style.width = '0%';
+      document.getElementById('loading-bar-container').style.display = 'block';
+      void document.getElementById('loading-bar').offsetWidth; // force reflow to restart animation
+
+      document.getElementById('info-output').textContent = '';
+
       setTimeout(() => {
-        fetch('https://ip-api.com/json')
+        fetch('https://ipwhois.app/json/')
           .then(res => res.json())
           .then(data => {
             let result = '';
             switch (type) {
-              case 'geo':
-                result = `Country: ${data.country}, City: ${data.city}, Region: ${data.regionName}`;
+              case 'location':
+                result = `Country: ${data.country}, City: ${data.city}, Region: ${data.region}`;
                 break;
               case 'isp':
-                result = `ISP: ${data.isp}, Org: ${data.org}`;
+                result = `ISP: ${data.isp}, Organization: ${data.org}`;
                 break;
               case 'asn':
-                result = `AS Number: ${data.as}, AS Name: ${data.asname}`;
+                result = `ASN: ${data.asn}, AS Name: ${data.as}`;
                 break;
               case 'timezone':
                 result = `Timezone: ${data.timezone}`;
                 break;
             }
-            output.textContent = result;
+            document.getElementById('loading-bar-container').style.display = 'none';
+            document.getElementById('info-output').textContent = result;
+            button.disabled = true;
           })
           .catch(() => {
-            output.textContent = 'Error loading data';
+            document.getElementById('loading-bar-container').style.display = 'none';
+            document.getElementById('info-output').textContent = 'Error loading data';
           });
       }, 1000);
     }
