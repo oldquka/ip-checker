@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Check Your IP Address</title>
+  <title>Your IP Address</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
   <!-- SEO Meta Tags -->
   <meta name="description" content="Free tool to instantly check your public IP address and related info. Simple, fast, privacy-friendly.">
@@ -65,117 +66,4 @@
       gap: 12px;
     }
 
-    button {
-      background-color: #006e52;
-      border: none;
-      color: white;
-      padding: 12px 20px;
-      font-size: 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    button:hover {
-      background-color: #009e75;
-    }
-
-    .info-block {
-      margin-top: 20px;
-      font-size: 1rem;
-      color: #ccc;
-    }
-
-    .footer-ad {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: #f9f9f9;
-      color: #000;
-      padding: 10px;
-      text-align: center;
-      font-size: 14px;
-      border-top: 1px solid #ddd;
-    }
-
-    @media (max-width: 600px) {
-      .ip-display {
-        font-size: 1.6rem;
-      }
-      button {
-        width: 100%;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="ad-slot" id="ad-top">[Top Ad Placeholder]</div>
-
-    <h1>Check Your IP Address</h1>
-    <div id="ip" class="ip-display loading">Loading your IP...</div>
-
-    <div class="buttons">
-      <button onclick="loadInfo('geo')">Show Location</button>
-      <button onclick="loadInfo('isp')">Show ISP Info</button>
-      <button onclick="loadInfo('asn')">Show ASN</button>
-      <button onclick="loadInfo('timezone')">Show Timezone</button>
-    </div>
-
-    <div id="info-output" class="info-block"></div>
-
-    <div class="ad-slot" id="ad-bottom">[Bottom Ad Placeholder]</div>
-  </div>
-
-  <div class="footer-ad" id="ad-footer">[Sticky Footer Ad Placeholder]</div>
-
-  <script>
-    // Load IP with delay for loading effect
-    window.addEventListener('DOMContentLoaded', () => {
-      setTimeout(() => {
-        fetch('https://api.ipify.org?format=json')
-          .then(res => res.json())
-          .then(data => {
-            document.getElementById('ip').textContent = data.ip;
-            document.getElementById('ip').classList.remove('loading');
-          })
-          .catch(() => {
-            document.getElementById('ip').textContent = 'Error loading IP';
-          });
-      }, 1000);
-    });
-
-    // Load extra info on demand
-    function loadInfo(type) {
-      const output = document.getElementById('info-output');
-      output.textContent = 'Loading ' + type + '...';
-      setTimeout(() => {
-        fetch('https://ip-api.com/json')
-          .then(res => res.json())
-          .then(data => {
-            let result = '';
-            switch (type) {
-              case 'geo':
-                result = `Country: ${data.country}, City: ${data.city}, Region: ${data.regionName}`;
-                break;
-              case 'isp':
-                result = `ISP: ${data.isp}, Org: ${data.org}`;
-                break;
-              case 'asn':
-                result = `AS Number: ${data.as}, AS Name: ${data.asname}`;
-                break;
-              case 'timezone':
-                result = `Timezone: ${data.timezone}`;
-                break;
-            }
-            output.textContent = result;
-          })
-          .catch(() => {
-            output.textContent = 'Error loading data';
-          });
-      }, 1000);
-    }
-  </script>
-</body>
-</html>
+    b
