@@ -210,6 +210,7 @@
   </div>
   <div class="footer-ad" id="ad-footer">[Sticky Footer Ad Placeholder]</div>
 
+  <!-- JS logic -->
   <script>
     function copyIP() {
       const ipText = document.getElementById('ip').textContent;
@@ -307,6 +308,22 @@
           });
       }, 1000);
     }
+  </script>
+
+  <!-- Google CMP cookie consent -->
+  <script
+    id="google-cmp"
+    type="text/javascript"
+    async
+    src="https://fundingchoicesmessages.google.com/i/pub-7033376842115898?ers=1"
+  ></script>
+  <script>
+    (function () {
+      window.__cmp = window.__cmp || function () {
+        (window.__cmp.q = window.__cmp.q || []).push(arguments)
+      };
+      window.__cmp('setConsentUiCallback', function () {});
+    })();
   </script>
 </body>
 </html>
