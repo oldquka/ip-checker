@@ -196,7 +196,7 @@
       }
 
       .info-item {
-        font-size: 1rem;
+        font-size: 1rem; /* Ujednačen font na mobilnim uređajima */
       }
 
       .buttons {
@@ -205,8 +205,8 @@
 
       .buttons button {
         width: 140px;
-        font-size: 0.85rem;
-        padding: 8px 10px;
+        font-size: 0.9rem;
+        padding: 8px 12px;
       }
 
       .copy-btn {
@@ -227,26 +227,6 @@
       <button onclick="declineCookies()" style="padding: 8px 16px; background: #444; color: white; border: none; border-radius: 4px;">Decline</button>
     </div>
   </div>
-  <script>
-    function acceptCookies() {
-      gtag('consent', 'update', {
-        'ad_storage': 'granted',
-        'analytics_storage': 'granted',
-        'ad_user_data': 'granted',
-        'ad_personalization': 'granted'
-      });
-      document.getElementById('cookie-banner').style.display = 'none';
-    }
-    function declineCookies() {
-      gtag('consent', 'update', {
-        'ad_storage': 'denied',
-        'analytics_storage': 'denied',
-        'ad_user_data': 'denied',
-        'ad_personalization': 'denied'
-      });
-      document.getElementById('cookie-banner').style.display = 'none';
-    }
-  </script>
 
   <div class="container">
     <div class="ad-slot" id="ad-top">[Top Ad Placeholder]</div>
@@ -265,7 +245,6 @@
     </div>
     <div class="ad-slot" id="ad-bottom">[Bottom Ad Placeholder]</div>
   </div>
-
   <div class="footer-ad" id="ad-footer">[Sticky Footer Ad Placeholder]</div>
 
   <script>
@@ -279,6 +258,26 @@
           btn.textContent = original;
         }, 2000);
       });
+    }
+
+    function acceptCookies() {
+      gtag('consent', 'update', {
+        'ad_storage': 'granted',
+        'analytics_storage': 'granted',
+        'ad_user_data': 'granted',
+        'ad_personalization': 'granted'
+      });
+      document.getElementById('cookie-banner').style.display = 'none';
+    }
+
+    function declineCookies() {
+      gtag('consent', 'update', {
+        'ad_storage': 'denied',
+        'analytics_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied'
+      });
+      document.getElementById('cookie-banner').style.display = 'none';
     }
 
     window.addEventListener('DOMContentLoaded', () => {
