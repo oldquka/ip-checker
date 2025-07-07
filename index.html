@@ -4,15 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Your IP Address</title>
-  <meta name="description" content="Check your IP address and location instantly with this simple and fast tool.">
-  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   <style>
     body {
       margin: 0;
-      padding: 40px 20px 80px;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #111;
       color: #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
       text-align: center;
     }
 
@@ -22,23 +28,12 @@
       margin-top: 10px;
     }
 
-    .ad-slot {
-      background-color: #f9f9f9;
-      color: #000;
-      margin: 20px 0;
-      padding: 10px;
-      border-radius: 8px;
-      font-size: 14px;
-      min-height: 100px;
-    }
-
     .ip-display-wrapper {
       display: flex;
-      justify-content: center;
       align-items: center;
-      flex-wrap: wrap;
+      justify-content: center;
       gap: 10px;
-      margin: 20px 0;
+      margin: 15px 0;
     }
 
     .ip-display {
@@ -49,66 +44,17 @@
 
     .copy-btn {
       background-color: #006e52;
-      color: white;
       border: none;
-      border-radius: 6px;
+      color: white;
       padding: 6px 12px;
       font-size: 0.9rem;
-      cursor: pointer;
-    }
-
-    .copy-btn:hover {
-      background-color: #009e75;
-    }
-
-    #loading-bar-container {
-      width: 100%;
-      max-width: 400px;
-      height: 6px;
-      background-color: #333;
-      border-radius: 4px;
-      overflow: hidden;
-      margin: 10px auto;
-    }
-
-    #loading-bar {
-      width: 0%;
-      height: 100%;
-      background-color: #00ffcc;
-      animation: loadBar 1s linear forwards;
-    }
-
-    @keyframes loadBar {
-      from { width: 0%; }
-      to { width: 100%; }
-    }
-
-    .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin: 20px 0;
-    }
-
-    .buttons button {
-      background-color: #006e52;
-      border: none;
       border-radius: 6px;
-      color: white;
-      padding: 10px 18px;
-      font-size: 1rem;
       cursor: pointer;
       transition: background-color 0.3s;
     }
 
-    .buttons button:hover:not(:disabled) {
+    .copy-btn:hover {
       background-color: #009e75;
-    }
-
-    .buttons button:disabled {
-      background-color: #444;
-      cursor: default;
     }
 
     .info-block {
@@ -116,7 +62,7 @@
     }
 
     .info-item {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       margin: 12px 0;
     }
 
@@ -140,7 +86,38 @@
       width: 66%;
       height: 1px;
       background-color: #00ffcc;
-      margin: 16px auto;
+      margin: 12px auto;
+    }
+
+    .buttons {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .buttons button {
+      background-color: #006e52;
+      border: none;
+      color: white;
+      padding: 10px 18px;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      width: 140px;
+      white-space: nowrap;
+    }
+
+    .buttons button:disabled {
+      background-color: #444;
+      cursor: default;
+      opacity: 0.6;
+    }
+
+    .buttons button:hover:not(:disabled) {
+      background-color: #009e75;
     }
 
     .footer-ad {
@@ -156,66 +133,59 @@
       border-top: 1px solid #ddd;
     }
 
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 1.1rem;
-      }
+    #loading-bar-container {
+      width: 100%;
+      max-width: 400px;
+      height: 6px;
+      background-color: #333;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 10px auto;
+      display: none;
+    }
 
+    #loading-bar {
+      width: 0%;
+      height: 100%;
+      background-color: #00ffcc;
+      animation: loadBar 1s linear forwards;
+    }
+
+    @keyframes loadBar {
+      from { width: 0%; }
+      to { width: 100%; }
+    }
+
+    @media (max-width: 600px) {
       .ip-display {
         font-size: 1.6rem;
       }
-
       .info-item {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
       }
-
-      .buttons button {
-        width: 140px;
-        font-size: 0.9rem;
-      }
-
       .copy-btn {
         font-size: 0.85rem;
-        white-space: nowrap;
+        padding: 6px 10px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="ad-slot" id="ad-top">[Top Ad Placeholder]</div>
-
-  <h1>Your IP Address is:</h1>
-
-  <div id="loading-bar-container"><div id="loading-bar"></div></div>
-
-  <div class="ip-display-wrapper">
-    <div id="ip" class="ip-display" style="display: none;"></div>
-    <button id="copyBtn" class="copy-btn" style="display: none;" onclick="copyIP()">Copy IP</button>
+  <div class="container">
+    <h1>Your IP Address is:</h1>
+    <div id="loading-bar-container"><div id="loading-bar"></div></div>
+    <div class="ip-display-wrapper">
+      <div id="ip" class="ip-display" style="display: none;"></div>
+      <button id="copyBtn" class="copy-btn" style="display: none;" onclick="copyIP()">Copy IP</button>
+    </div>
+    <div id="info-output" class="info-block"></div>
+    <div class="buttons">
+      <button onclick="loadInfo('location', this)">Show Location</button>
+      <button onclick="loadInfo('isp', this)">Show ISP Info</button>
+      <button onclick="loadInfo('asn', this)">Show ASN</button>
+      <button onclick="loadInfo('timezone', this)">Show Timezone</button>
+    </div>
   </div>
-
-  <div id="info-output" class="info-block"></div>
-
-  <div class="buttons">
-    <button onclick="loadInfo('location', this)">Show Location</button>
-    <button onclick="loadInfo('isp', this)">Show ISP Info</button>
-    <button onclick="loadInfo('asn', this)">Show ASN</button>
-    <button onclick="loadInfo('timezone', this)">Show Timezone</button>
-  </div>
-
-  <div class="ad-slot" id="ad-bottom">[Bottom Ad Placeholder]</div>
-  <div class="footer-ad" id="ad-footer">[Sticky Footer Ad Placeholder]</div>
-
-  <!-- Cookie Consent (CMP) Placeholder -->
-  <script async src="https://fundingchoicesmessages.google.com/i/pub-7033376842115898?ers=1" nonce="abc123"></script>
-  <script nonce="abc123">
-    (function() {
-      window.fundingChoicesMessages = window.fundingChoicesMessages || [];
-      window.fundingChoicesMessages.push(function(fcm) {
-        fcm.showConsentDialog();
-      });
-    })();
-  </script>
-
   <script>
     function copyIP() {
       const ipText = document.getElementById('ip').textContent;
@@ -230,6 +200,7 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('loading-bar-container').style.display = 'block';
       setTimeout(() => {
         fetch('https://api.ipify.org?format=json')
           .then(res => res.json())
@@ -238,6 +209,9 @@
             document.getElementById('loading-bar-container').style.display = 'none';
             document.getElementById('ip').style.display = 'block';
             document.getElementById('copyBtn').style.display = 'inline-block';
+          })
+          .catch(() => {
+            document.getElementById('ip').textContent = 'Error loading IP';
           });
       }, 1000);
     });
@@ -252,10 +226,9 @@
           .then(res => res.json())
           .then(data => {
             let output = '';
-
             switch (type) {
               case 'location':
-                output += `<div class="info-item"><span class="info-label">Country: </span><span class="info-value">${data.country}<img class="flag" src="https://flagsapi.com/${data.country_code}/flat/32.png" alt="flag"></span></div>`;
+                output += `<div class="info-item"><span class="info-label">Country: </span><span class="info-value">${data.country}<img class="flag" src="https://flagsapi.com/${data.country_code}/flat/32.png" alt="${data.country} flag"></span></div>`;
                 output += `<div class="info-item"><span class="info-label">City: </span><span class="info-value">${data.city}</span></div>`;
                 output += `<div class="info-item"><span class="info-label">Region: </span><span class="info-value">${data.region}</span></div>`;
                 break;
@@ -270,7 +243,6 @@
                 output += `<div class="info-item"><span class="info-label">Timezone: </span><span class="info-value">${data.timezone}</span></div>`;
                 break;
             }
-
             const divider = document.createElement('div');
             divider.className = 'divider';
             document.getElementById('info-output').appendChild(divider);
@@ -281,6 +253,13 @@
 
             document.getElementById('loading-bar-container').style.display = 'none';
             button.disabled = true;
+          })
+          .catch(() => {
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'info-item';
+            errorMsg.textContent = 'Error loading data';
+            document.getElementById('info-output').appendChild(errorMsg);
+            document.getElementById('loading-bar-container').style.display = 'none';
           });
       }, 1000);
     }
