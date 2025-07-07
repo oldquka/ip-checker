@@ -57,9 +57,25 @@
     }
 
     .info-item {
-      color: #00ffcc;
       font-size: 1.5rem;
-      margin: 12px 0;
+      margin: 16px 0;
+    }
+
+    .info-label {
+      color: #fff;
+      font-weight: normal;
+    }
+
+    .info-value {
+      color: #00ffcc;
+      font-weight: bold;
+    }
+
+    .divider {
+      width: 66%;
+      height: 1px;
+      background-color: #00ffcc;
+      margin: 20px auto;
     }
 
     .buttons {
@@ -164,7 +180,6 @@
   <div class="footer-ad" id="ad-footer">[Sticky Footer Ad Placeholder]</div>
 
   <script>
-    // Initial IP load
     window.addEventListener('DOMContentLoaded', () => {
       document.getElementById('loading-bar-container').style.display = 'block';
       setTimeout(() => {
@@ -183,7 +198,6 @@
       }, 1000);
     });
 
-    // Load extra info
     function loadInfo(type, button) {
       document.getElementById('loading-bar').style.width = '0%';
       document.getElementById('loading-bar-container').style.display = 'block';
@@ -193,27 +207,34 @@
         fetch('https://ipwhois.app/json/')
           .then(res => res.json())
           .then(data => {
-            let result = '';
+            let output = '';
+
             switch (type) {
               case 'location':
-                result = `Country: ${data.country}, City: ${data.city}, Region: ${data.region}`;
+                output += `<div class="info-item"><span class="info-label">Country: </span><span class="info-value">${data.country}</span></div>`;
+                output += `<div class="info-item"><span class="info-label">City: </span><span class="info-value">${data.city}</span></div>`;
+                output += `<div class="info-item"><span class="info-label">Region: </span><span class="info-value">${data.region}</span></div>`;
                 break;
               case 'isp':
-                result = `ISP: ${data.isp}, Organization: ${data.org}`;
+                output += `<div class="info-item"><span class="info-label">ISP: </span><span class="info-value">${data.isp}</span></div>`;
                 break;
               case 'asn':
-                result = `ASN: ${data.asn}, AS Name: ${data.as}`;
+                output += `<div class="info-item"><span class="info-label">ASN: </span><span class="info-value">${data.asn}</span></div>`;
+                output += `<div class="info-item"><span class="info-label">AS Name: </span><span class="info-value">${data.as}</span></div>`;
                 break;
               case 'timezone':
-                result = `Timezone: ${data.timezone}`;
+                output += `<div class="info-item"><span class="info-label">Timezone: </span><span class="info-value">${data.timezone}</span></div>`;
                 break;
             }
 
-            // Dodaj novi blok ispod postojećih
-            const newInfo = document.createElement('div');
-            newInfo.className = 'info-item';
-            newInfo.textContent = result;
-            document.getElementById('info-output').appendChild(newInfo);
+            // Dodaj separator i novi blok
+            const divider = document.createElement('div');
+            divider.className = 'divider';
+            document.getElementById('info-output').appendChild(divider);
+
+            const block = document.createElement('div');
+            block.innerHTML = output;
+            document.getElementById('info-output').appendChild(block);
 
             document.getElementById('loading-bar-container').style.display = 'none';
             button.disabled = true;
