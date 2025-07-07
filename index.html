@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Your IP Address</title>
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <style>
     body {
       margin: 0;
@@ -32,20 +31,17 @@
       font-size: 14px;
       text-align: center;
       min-height: 100px;
-      max-width: 100%;
     }
 
     h1 {
       font-size: 1.4rem;
-      margin-bottom: 15px;
-      margin-top: 10px;
+      margin: 10px 0;
     }
 
     .ip-display-wrapper {
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-wrap: nowrap;
       gap: 10px;
       margin: 15px 0;
     }
@@ -71,13 +67,56 @@
       background-color: #009e75;
     }
 
+    .buttons {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .buttons button {
+      background-color: #006e52;
+      border: none;
+      color: white;
+      padding: 10px 18px;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .buttons button:hover:not(:disabled) {
+      background-color: #009e75;
+    }
+
+    .buttons button:disabled {
+      background-color: #444;
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .footer-ad {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #f9f9f9;
+      color: #000;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+      border-top: 1px solid #ddd;
+    }
+
     .info-block {
       margin-top: 10px;
+      width: 100%;
     }
 
     .info-item {
-      font-size: 1.5rem;
-      margin: 12px 0;
+      font-size: 1.1rem;
+      margin: 10px 0;
     }
 
     .info-label {
@@ -101,48 +140,6 @@
       height: 1px;
       background-color: #00ffcc;
       margin: 12px auto;
-    }
-
-    .buttons {
-      margin-top: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .buttons button {
-      background-color: #006e52;
-      border: none;
-      color: white;
-      padding: 10px 18px;
-      font-size: 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .buttons button:disabled {
-      background-color: #444;
-      cursor: default;
-      opacity: 0.6;
-    }
-
-    .buttons button:hover:not(:disabled) {
-      background-color: #009e75;
-    }
-
-    .footer-ad {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: #f9f9f9;
-      color: #000;
-      padding: 10px;
-      text-align: center;
-      font-size: 14px;
-      border-top: 1px solid #ddd;
     }
 
     #loading-bar-container {
@@ -169,9 +166,8 @@
     }
 
     @media (max-width: 600px) {
-      .ip-display-wrapper {
-        justify-content: center;
-        gap: 8px;
+      h1 {
+        font-size: 1.1rem;
       }
 
       .ip-display {
@@ -179,17 +175,17 @@
       }
 
       .info-item {
-        font-size: 1.1rem !important;
+        font-size: 1rem;
       }
 
       .buttons button {
         width: 140px;
+        font-size: 0.9rem;
       }
 
       .copy-btn {
-        font-size: 0.85rem;
-        padding: 6px 10px;
-        white-space: nowrap;
+        font-size: 0.8rem;
+        padding: 5px 10px;
       }
     }
   </style>
@@ -213,6 +209,7 @@
     <div class="ad-slot" id="ad-bottom">[Bottom Ad Placeholder]</div>
   </div>
   <div class="footer-ad" id="ad-footer">[Sticky Footer Ad Placeholder]</div>
+
   <script>
     function copyIP() {
       const ipText = document.getElementById('ip').textContent;
@@ -220,9 +217,7 @@
         const btn = document.getElementById('copyBtn');
         const original = btn.textContent;
         btn.textContent = 'Copied!';
-        setTimeout(() => {
-          btn.textContent = original;
-        }, 2000);
+        setTimeout(() => { btn.textContent = original; }, 2000);
       });
     }
 
@@ -236,14 +231,35 @@
             document.getElementById('loading-bar-container').style.display = 'none';
             document.getElementById('ip').style.display = 'block';
             document.getElementById('copyBtn').style.display = 'inline-block';
-          })
-          .catch(() => {
-            document.getElementById('ip').textContent = 'Error loading IP';
-            document.getElementById('loading-bar-container').style.display = 'none';
-            document.getElementById('ip').style.display = 'block';
           });
       }, 1000);
     });
+
+    function createInfoItem(labelText, valueText, flagUrl = null) {
+      const item = document.createElement('div');
+      item.className = 'info-item';
+
+      const label = document.createElement('span');
+      label.className = 'info-label';
+      label.textContent = labelText;
+
+      const value = document.createElement('span');
+      value.className = 'info-value';
+      value.textContent = valueText;
+
+      item.appendChild(label);
+      item.appendChild(value);
+
+      if (flagUrl) {
+        const img = document.createElement('img');
+        img.src = flagUrl;
+        img.className = 'flag';
+        img.alt = valueText + " flag";
+        item.appendChild(img);
+      }
+
+      return item;
+    }
 
     function loadInfo(type, button) {
       document.getElementById('loading-bar').style.width = '0%';
@@ -254,42 +270,39 @@
         fetch('https://ipwhois.app/json/')
           .then(res => res.json())
           .then(data => {
-            let output = '';
-
-            switch (type) {
-              case 'location':
-                output += `<div class="info-item"><span class="info-label">Country: </span><span class="info-value">${data.country}<img class="flag" src="https://flagsapi.com/${data.country_code}/flat/32.png" alt="${data.country} flag"></span></div>`;
-                output += `<div class="info-item"><span class="info-label">City: </span><span class="info-value">${data.city}</span></div>`;
-                output += `<div class="info-item"><span class="info-label">Region: </span><span class="info-value">${data.region}</span></div>`;
-                break;
-              case 'isp':
-                output += `<div class="info-item"><span class="info-label">ISP: </span><span class="info-value">${data.isp}</span></div>`;
-                break;
-              case 'asn':
-                output += `<div class="info-item"><span class="info-label">ASN: </span><span class="info-value">${data.asn}</span></div>`;
-                output += `<div class="info-item"><span class="info-label">AS Name: </span><span class="info-value">${data.as}</span></div>`;
-                break;
-              case 'timezone':
-                output += `<div class="info-item"><span class="info-label">Timezone: </span><span class="info-value">${data.timezone}</span></div>`;
-                break;
-            }
+            const output = document.getElementById('info-output');
 
             const divider = document.createElement('div');
             divider.className = 'divider';
-            document.getElementById('info-output').appendChild(divider);
+            output.appendChild(divider);
 
             const block = document.createElement('div');
-            block.innerHTML = output;
-            document.getElementById('info-output').appendChild(block);
 
+            if (type === 'location') {
+              block.appendChild(createInfoItem('Country: ', data.country, `https://flagsapi.com/${data.country_code}/flat/32.png`));
+              block.appendChild(createInfoItem('City: ', data.city));
+              block.appendChild(createInfoItem('Region: ', data.region));
+            }
+            else if (type === 'isp') {
+              block.appendChild(createInfoItem('ISP: ', data.isp));
+            }
+            else if (type === 'asn') {
+              block.appendChild(createInfoItem('ASN: ', data.asn));
+              block.appendChild(createInfoItem('AS Name: ', data.as));
+            }
+            else if (type === 'timezone') {
+              block.appendChild(createInfoItem('Timezone: ', data.timezone));
+            }
+
+            output.appendChild(block);
             document.getElementById('loading-bar-container').style.display = 'none';
             button.disabled = true;
           })
           .catch(() => {
-            const errorMsg = document.createElement('div');
-            errorMsg.className = 'info-item';
-            errorMsg.textContent = 'Error loading data';
-            document.getElementById('info-output').appendChild(errorMsg);
+            const error = document.createElement('div');
+            error.className = 'info-item';
+            error.textContent = 'Error loading data';
+            document.getElementById('info-output').appendChild(error);
             document.getElementById('loading-bar-container').style.display = 'none';
           });
       }, 1000);
