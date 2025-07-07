@@ -9,8 +9,8 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7033376842115898"
           crossorigin="anonymous"></script>
 
-  <!-- Google Consent Mode -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-CONVERSION_ID"></script>
+  <!-- Google Consent Mode (v2) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-0000000000"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -21,15 +21,298 @@
       'ad_personalization': 'denied'
     });
     gtag('js', new Date());
-    gtag('config', 'AW-CONVERSION_ID');
+    gtag('config', 'AW-0000000000');
   </script>
 
   <style>
-    /* Stilovi su isti kao ranije, uključeni CMP stil */
-    /* ... (preskakanje da ne dužimo) ... */
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #111;
+      color: #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 100px 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .ad-slot {
+      background-color: #f9f9f9;
+      color: #000;
+      margin: 20px 0;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .ip-display {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #00ffcc;
+      margin: 30px 0;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .copy-btn {
+      margin-left: 10px;
+      font-size: 0.9rem;
+      padding: 4px 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      background-color: #007f66;
+      color: white;
+    }
+
+    .copy-btn.copied {
+      background-color: #004d3a;
+    }
+
+    .loading-bar {
+      width: 80%;
+      height: 6px;
+      background-color: #444;
+      margin: 20px auto;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .loading-bar-inner {
+      width: 0;
+      height: 100%;
+      background-color: #00ffcc;
+      animation: loading 1s ease-out forwards;
+    }
+
+    @keyframes loading {
+      to { width: 100%; }
+    }
+
+    .info-block {
+      font-size: 0.75rem;
+      color: #ccc;
+      margin-top: 20px;
+    }
+
+    .info-block span.label {
+      color: white;
+    }
+
+    .separator {
+      margin: 20px auto;
+      height: 1px;
+      width: 66%;
+      background-color: #00ffcc;
+    }
+
+    .buttons {
+      margin-top: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    button {
+      background-color: #006e52;
+      border: none;
+      color: white;
+      padding: 10px 16px;
+      font-size: 0.85rem;
+      border-radius: 6px;
+      cursor: pointer;
+      flex: 0 0 calc(50% - 12px);
+      max-width: 180px;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    .footer-ad {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #f9f9f9;
+      color: #000;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+      border-top: 1px solid #ddd;
+    }
+
+    #consent-banner {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #222;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      z-index: 9999;
+      font-size: 0.9rem;
+    }
+
+    #consent-banner button {
+      margin: 10px 5px 0;
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #consent-banner .accept {
+      background-color: #007f66;
+      color: white;
+    }
+
+    #consent-banner .decline {
+      background-color: #555;
+      color: white;
+    }
+
+    @media (max-width: 600px) {
+      .ip-display {
+        font-size: 1.4rem;
+      }
+      .info-block {
+        font-size: 0.7rem;
+      }
+      button {
+        font-size: 0.8rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <!-- CMP banner, sajt, dugmad, itd. - već je ubačeno kao gore u poruci -->
+  <div class="container">
+    <div class="ad-slot" id="ad-top">[Top Ad Placeholder]</div>
+
+    <h1 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Your IP Address is:</h1>
+    <div class="ip-display">
+      <span id="ip">Loading...</span>
+      <button class="copy-btn" id="copyBtn" onclick="copyIP()">Copy</button>
+    </div>
+
+    <div id="info-container"></div>
+
+    <div class="buttons">
+      <button onclick="loadInfo('geo', this)">Show Location</button>
+      <button onclick="loadInfo('isp', this)">Show ISP Info</button>
+      <button onclick="loadInfo('asn', this)">Show ASN</button>
+      <button onclick="loadInfo('timezone', this)">Show Timezone</button>
+    </div>
+
+    <div class="ad-slot" id="ad-bottom">[Bottom Ad Placeholder]</div>
+  </div>
+
+  <div class="footer-ad">[Sticky Footer Ad Placeholder]</div>
+
+  <div id="consent-banner">
+    This website uses cookies to ensure the best experience. 
+    <br/>
+    <button class="accept" onclick="acceptConsent()">Accept</button>
+    <button class="decline" onclick="declineConsent()">Decline</button>
+  </div>
+
+  <script>
+    function copyIP() {
+      const ip = document.getElementById('ip').textContent;
+      navigator.clipboard.writeText(ip).then(() => {
+        const btn = document.getElementById('copyBtn');
+        btn.textContent = 'Copied';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 1500);
+      });
+    }
+
+    function loadInfo(type, btn) {
+      btn.disabled = true;
+      const container = document.getElementById('info-container');
+      const loading = document.createElement('div');
+      loading.className = 'loading-bar';
+      loading.innerHTML = '<div class="loading-bar-inner"></div>';
+      container.appendChild(loading);
+
+      setTimeout(() => {
+        fetch('https://ipapi.co/json/')
+          .then(res => res.json())
+          .then(data => {
+            const block = document.createElement('div');
+            block.className = 'info-block';
+            block.innerHTML = '<div class="separator"></div>';
+            switch (type) {
+              case 'geo':
+                block.innerHTML += '<span class="label">Country:</span> ' + data.country_name + ' <img src="https://flagcdn.com/24x18/' + data.country_code.toLowerCase() + '.png" style="vertical-align: middle; margin-left: 6px;" />';
+                break;
+              case 'isp':
+                block.innerHTML += '<span class="label">ISP:</span> ' + data.org;
+                break;
+              case 'asn':
+                block.innerHTML += '<span class="label">AS:</span> ' + data.asn;
+                break;
+              case 'timezone':
+                block.innerHTML += '<span class="label">Timezone:</span> ' + data.timezone;
+                break;
+            }
+            container.removeChild(loading);
+            container.appendChild(block);
+          })
+          .catch(() => {
+            container.removeChild(loading);
+            const error = document.createElement('div');
+            error.className = 'info-block';
+            error.textContent = 'Error loading data';
+            container.appendChild(error);
+          });
+      }, 1000);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        fetch('https://api.ipify.org?format=json')
+          .then(res => res.json())
+          .then(data => {
+            document.getElementById('ip').textContent = data.ip;
+          });
+      }, 1000);
+    });
+
+    function acceptConsent() {
+      gtag('consent', 'update', {
+        'ad_storage': 'granted',
+        'analytics_storage': 'granted',
+        'ad_user_data': 'granted',
+        'ad_personalization': 'granted'
+      });
+      document.getElementById('consent-banner').style.display = 'none';
+    }
+
+    function declineConsent() {
+      gtag('consent', 'update', {
+        'ad_storage': 'denied',
+        'analytics_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied'
+      });
+      document.getElementById('consent-banner').style.display = 'none';
+    }
+  </script>
 </body>
 </html>
