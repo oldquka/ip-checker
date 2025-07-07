@@ -52,12 +52,6 @@
       min-height: 40px;
     }
 
-    .loading {
-      font-style: italic;
-      font-size: 1.2rem;
-      color: #888;
-    }
-
     .buttons {
       margin-top: 30px;
       display: flex;
@@ -100,6 +94,29 @@
       border-top: 1px solid #ddd;
     }
 
+    /* Loading bar styles */
+    #loading-bar-container {
+      width: 100%;
+      max-width: 400px;
+      height: 6px;
+      background-color: #333;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 30px auto;
+    }
+
+    #loading-bar {
+      width: 0%;
+      height: 100%;
+      background-color: #00ffcc;
+      animation: loadBar 1s linear forwards;
+    }
+
+    @keyframes loadBar {
+      from { width: 0%; }
+      to { width: 100%; }
+    }
+
     @media (max-width: 600px) {
       .ip-display {
         font-size: 1.6rem;
@@ -115,7 +132,12 @@
     <div class="ad-slot" id="ad-top">[Top Ad Placeholder]</div>
 
     <h1>Your IP Address is:</h1>
-    <div id="ip" class="ip-display loading">Loading your IP...</div>
+
+    <div id="loading-bar-container">
+      <div id="loading-bar"></div>
+    </div>
+
+    <div id="ip" class="ip-display" style="display: none;"></div>
 
     <div class="buttons">
       <button onclick="loadInfo('geo')">Show Location</button>
@@ -139,10 +161,13 @@
           .then(res => res.json())
           .then(data => {
             document.getElementById('ip').textContent = data.ip;
-            document.getElementById('ip').classList.remove('loading');
+            document.getElementById('loading-bar-container').style.display = 'none';
+            document.getElementById('ip').style.display = 'block';
           })
           .catch(() => {
             document.getElementById('ip').textContent = 'Error loading IP';
+            document.getElementById('loading-bar-container').style.display = 'none';
+            document.getElementById('ip').style.display = 'block';
           });
       }, 1000);
     });
