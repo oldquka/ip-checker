@@ -65,7 +65,6 @@
       border-radius: 6px;
       cursor: pointer;
       transition: background-color 0.3s;
-      transform: translateY(3px);
     }
 
     .copy-btn:hover {
@@ -183,17 +182,11 @@
         font-size: 1.1rem !important;
       }
 
-      .buttons {
-        gap: 10px;
-      }
-
       .buttons button {
         width: 140px;
-        font-size: 0.9rem;
       }
 
       .copy-btn {
-        transform: translateY(0);
         font-size: 0.85rem;
         padding: 6px 10px;
         white-space: nowrap;
@@ -202,6 +195,105 @@
   </style>
 </head>
 <body>
-  <!-- Sadrzaj tela isti kao prethodni, ostavljen radi preglednosti -->
+  <div class="container">
+    <div class="ad-slot" id="ad-top">[Top Ad Placeholder]</div>
+    <h1>Your IP Address is:</h1>
+    <div id="loading-bar-container"><div id="loading-bar"></div></div>
+    <div class="ip-display-wrapper">
+      <div id="ip" class="ip-display" style="display: none;"></div>
+      <button id="copyBtn" class="copy-btn" style="display: none;" onclick="copyIP()">Copy IP</button>
+    </div>
+    <div id="info-output" class="info-block"></div>
+    <div class="buttons">
+      <button onclick="loadInfo('location', this)">Show Location</button>
+      <button onclick="loadInfo('isp', this)">Show ISP Info</button>
+      <button onclick="loadInfo('asn', this)">Show ASN</button>
+      <button onclick="loadInfo('timezone', this)">Show Timezone</button>
+    </div>
+    <div class="ad-slot" id="ad-bottom">[Bottom Ad Placeholder]</div>
+  </div>
+  <div class="footer-ad" id="ad-footer">[Sticky Footer Ad Placeholder]</div>
+  <script>
+    function copyIP() {
+      const ipText = document.getElementById('ip').textContent;
+      navigator.clipboard.writeText(ipText).then(() => {
+        const btn = document.getElementById('copyBtn');
+        const original = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => {
+          btn.textContent = original;
+        }, 2000);
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('loading-bar-container').style.display = 'block';
+      setTimeout(() => {
+        fetch('https://api.ipify.org?format=json')
+          .then(res => res.json())
+          .then(data => {
+            document.getElementById('ip').textContent = data.ip;
+            document.getElementById('loading-bar-container').style.display = 'none';
+            document.getElementById('ip').style.display = 'block';
+            document.getElementById('copyBtn').style.display = 'inline-block';
+          })
+          .catch(() => {
+            document.getElementById('ip').textContent = 'Error loading IP';
+            document.getElementById('loading-bar-container').style.display = 'none';
+            document.getElementById('ip').style.display = 'block';
+          });
+      }, 1000);
+    });
+
+    function loadInfo(type, button) {
+      document.getElementById('loading-bar').style.width = '0%';
+      document.getElementById('loading-bar-container').style.display = 'block';
+      void document.getElementById('loading-bar').offsetWidth;
+
+      setTimeout(() => {
+        fetch('https://ipwhois.app/json/')
+          .then(res => res.json())
+          .then(data => {
+            let output = '';
+
+            switch (type) {
+              case 'location':
+                output += `<div class="info-item"><span class="info-label">Country: </span><span class="info-value">${data.country}<img class="flag" src="https://flagsapi.com/${data.country_code}/flat/32.png" alt="${data.country} flag"></span></div>`;
+                output += `<div class="info-item"><span class="info-label">City: </span><span class="info-value">${data.city}</span></div>`;
+                output += `<div class="info-item"><span class="info-label">Region: </span><span class="info-value">${data.region}</span></div>`;
+                break;
+              case 'isp':
+                output += `<div class="info-item"><span class="info-label">ISP: </span><span class="info-value">${data.isp}</span></div>`;
+                break;
+              case 'asn':
+                output += `<div class="info-item"><span class="info-label">ASN: </span><span class="info-value">${data.asn}</span></div>`;
+                output += `<div class="info-item"><span class="info-label">AS Name: </span><span class="info-value">${data.as}</span></div>`;
+                break;
+              case 'timezone':
+                output += `<div class="info-item"><span class="info-label">Timezone: </span><span class="info-value">${data.timezone}</span></div>`;
+                break;
+            }
+
+            const divider = document.createElement('div');
+            divider.className = 'divider';
+            document.getElementById('info-output').appendChild(divider);
+
+            const block = document.createElement('div');
+            block.innerHTML = output;
+            document.getElementById('info-output').appendChild(block);
+
+            document.getElementById('loading-bar-container').style.display = 'none';
+            button.disabled = true;
+          })
+          .catch(() => {
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'info-item';
+            errorMsg.textContent = 'Error loading data';
+            document.getElementById('info-output').appendChild(errorMsg);
+            document.getElementById('loading-bar-container').style.display = 'none';
+          });
+      }, 1000);
+    }
+  </script>
 </body>
 </html>
