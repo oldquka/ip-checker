@@ -1,308 +1,679 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Your IP Address</title>
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <meta charset="UTF-8">
+  <title>IP Checker | Simple, Fast & Private</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Check your public IP address, ISP, ASN, location, timezone, and connection details. 100% privacy-friendly, ad-optimized, and mobile-ready.">
+  <meta name="keywords" content="IP address, ISP, ASN, IPv4, IPv6, geolocation, browser info, public IP, online privacy, checker">
+  <meta name="author" content="Dragan & AI">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <!-- Open Graph tags -->
+  <meta property="og:title" content="IP Checker | Simple, Fast & Private">
+  <meta property="og:description" content="Check your public IP address, ISP, ASN, location, timezone, and connection details.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://YOUR_DOMAIN_HERE/">
+  <!-- Twitter Card tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="IP Checker | Simple, Fast & Private">
+  <meta name="twitter:description" content="Check your public IP address, ISP, ASN, location, timezone, and connection details.">
+  <!-- Structured data for FAQ (for SEO) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "What is an IP address?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "An IP address is a unique identifier assigned to your device on the internet. It helps websites and online services know where to send information."
+      }
+    },{
+      "@type": "Question",
+      "name": "Can my IP address reveal my location?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Your public IP address can reveal an approximate geographic area, such as your city or country, but not your exact address."
+      }
+    }]
+  }
+  </script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Fira+Mono:wght@700&display=swap" rel="stylesheet">
   <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #111;
-      color: #e0e0e0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 40px 20px;
+    :root {
+      --dark-bg: #161b22;
+      --light-bg: #23282f;
+      --green: #00ff9f;
+      --green-bold: #00e887;
+      --white: #ffffff;
+      --gray: #b5bac2;
+      --btn-bg: #23282f;
+      --btn-active: #2d3741;
+      --btn-disabled: #323842;
+      --btn-border: #00ff9f;
+      --transition: 0.2s;
     }
 
+    html, body {
+      margin: 0; padding: 0;
+      font-family: 'Inter', Arial, sans-serif;
+      background: var(--dark-bg);
+      color: var(--white);
+      min-height: 100%;
+      width: 100vw;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+    a { color: var(--green); text-decoration: underline; }
+    a:visited { color: var(--green-bold); }
     .container {
-      max-width: 600px;
+      max-width: 440px;
+      margin: 32px auto 32px auto;
+      background: var(--light-bg);
+      border-radius: 18px;
+      box-shadow: 0 2px 24px rgba(0,0,0,0.18);
+      padding: 32px 20px 24px 20px;
+      position: relative;
+      z-index: 1;
+    }
+    .ad-placeholder {
       width: 100%;
-      text-align: center;
-    }
-
-    .ad-slot {
-      background-color: #f9f9f9;
-      color: #000;
-      margin: 20px 0;
-      padding: 10px;
-      border-radius: 8px;
-      font-size: 14px;
-      text-align: center;
-      min-height: 100px;
-      max-width: 100%;
-    }
-
-    h1 {
-      font-size: 1.4rem;
-      margin-bottom: 15px;
-      margin-top: 10px;
-    }
-
-    .ip-display-wrapper {
+      min-height: 64px;
+      background: #20242b;
+      color: var(--gray);
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-wrap: nowrap;
-      gap: 10px;
-      margin: 15px 0;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 1rem;
+      font-style: italic;
+      letter-spacing: 0.05em;
+      border: 1px dashed var(--btn-border);
+      opacity: 0.9;
+    }
+    .ad-middle { margin-top: 28px; margin-bottom: 12px; }
+    /* Sticky footer ad (desktop only) */
+    @media (min-width: 600px) {
+      .ad-sticky {
+        position: fixed;
+        bottom: 0; left: 0; width: 100vw;
+        z-index: 999;
+        background: #1a1f27e8;
+        min-height: 52px;
+        box-shadow: 0 -2px 12px rgba(0,0,0,0.13);
+        border-top: 1px solid #262b33;
+        display: flex; align-items: center; justify-content: center;
+        color: var(--gray);
+        font-size: 1rem;
+        font-style: italic;
+      }
+    }
+    @media (max-width: 599px) {
+      .ad-sticky { display: none; }
+      .container { margin-top: 18px; margin-bottom: 18px; padding: 16px 3vw 12px 3vw;}
     }
 
-    .ip-display {
-      font-size: 2rem;
-      font-weight: bold;
-      color: #00ffcc;
+    /* Loader */
+    .loader-outer {
+      display: flex; align-items: center; justify-content: center;
+      height: 150px; margin-bottom: 18px;
+    }
+    .circular-loader {
+      width: 80px; height: 80px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .circular-bg {
+      stroke: #282c34;
+      stroke-width: 10;
+    }
+    .circular-bar {
+      stroke: url(#loader-gradient);
+      stroke-width: 10;
+      stroke-linecap: round;
+      transition: stroke-dasharray 0.4s linear;
+    }
+    .loader-perc {
+      position: absolute;
+      top: 0; left: 0;
+      width: 80px; height: 80px;
+      display: flex;
+      align-items: center; justify-content: center;
+      font-family: 'Fira Mono', monospace;
+      font-weight: 700;
+      font-size: 1.35rem;
+      color: var(--white);
+      transition: color 0.25s;
+      letter-spacing: 0.01em;
+      user-select: none;
+      pointer-events: none;
     }
 
-    .copy-btn {
-      background-color: #006e52;
+    /* Mini info row */
+    .mini-info {
+      text-align: center;
+      color: var(--gray);
+      font-size: 0.98rem;
+      margin-bottom: 12px;
+      letter-spacing: 0.01em;
+      font-family: 'Inter', Arial, sans-serif;
+      font-weight: 400;
+      word-break: break-all;
+    }
+
+    /* IP address row */
+    .ip-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+    .ip-label {
+      font-size: 1.15rem;
+      color: var(--gray);
+      margin-bottom: 2px;
+      text-align: center;
+      letter-spacing: 0.01em;
+    }
+    .ip-value {
+      font-family: 'Fira Mono', monospace;
+      font-size: 2.05rem;
+      font-weight: 700;
+      color: var(--green);
+      margin: 0 8px 0 0;
+      letter-spacing: 0.02em;
+      background: none;
       border: none;
-      color: white;
-      padding: 6px 12px;
-      font-size: 0.9rem;
-      border-radius: 6px;
+      outline: none;
+      transition: color var(--transition);
+      cursor: default;
+      word-break: break-all;
+      padding: 0;
+      line-height: 1.07em;
+    }
+    .btn-copy {
+      background: var(--btn-bg);
+      color: var(--green);
+      border: 1.7px solid var(--btn-border);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: 'Inter', Arial, sans-serif;
+      font-weight: 700;
+      padding: 6px 13px;
       cursor: pointer;
-      transition: background-color 0.3s;
-      transform: translateY(3px);
+      transition: background 0.17s, color 0.15s;
+      margin-left: 6px;
+      outline: none;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .btn-copy:active {
+      background: var(--green); color: var(--btn-bg);
+      border-color: var(--green-bold);
+    }
+    .btn-copy.copied {
+      background: var(--green-bold);
+      color: var(--btn-bg);
+      border-color: var(--green-bold);
+      pointer-events: none;
+    }
+    .ip-desc {
+      text-align: center;
+      color: var(--gray);
+      font-size: 1.01rem;
+      margin-bottom: 18px;
+      margin-top: 4px;
+      line-height: 1.48em;
     }
 
-    .copy-btn:hover {
-      background-color: #009e75;
-    }
-
-    .info-block {
-      margin-top: 10px;
-    }
-
-    .info-item {
-      font-size: 1.5rem;
-      margin: 12px 0;
-    }
-
-    .info-label {
-      color: #fff;
-    }
-
-    .info-value {
-      color: #00ffcc;
-      font-weight: bold;
-    }
-
-    .flag {
-      margin-left: 10px;
-      vertical-align: middle;
-      width: 32px;
-      height: 20px;
-    }
-
-    .divider {
-      width: 66%;
-      height: 1px;
-      background-color: #00ffcc;
-      margin: 12px auto;
-    }
-
-    .buttons {
-      margin-top: 20px;
+    /* Reveal buttons */
+    .reveal-row {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 10px;
+      gap: 14px;
+      margin-bottom: 14px;
+      margin-top: 2px;
     }
-
-    .buttons button {
-      background-color: #006e52;
-      border: none;
-      color: white;
-      padding: 10px 18px;
-      font-size: 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .buttons button:disabled {
-      background-color: #444;
-      cursor: default;
-      opacity: 0.6;
-    }
-
-    .buttons button:hover:not(:disabled) {
-      background-color: #009e75;
-    }
-
-    .footer-ad {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: #f9f9f9;
-      color: #000;
-      padding: 10px;
+    .reveal-btn {
+      background: var(--btn-bg);
+      color: var(--white);
+      border: 2px solid var(--btn-border);
+      border-radius: 9px;
+      font-size: 1.01rem;
+      font-family: 'Inter', Arial, sans-serif;
+      font-weight: 700;
+      padding: 11px 18px;
+      min-width: 120px;
+      min-height: 42px;
       text-align: center;
-      font-size: 14px;
-      border-top: 1px solid #ddd;
+      cursor: pointer;
+      outline: none;
+      margin-bottom: 3px;
+      transition: 
+        background 0.16s, color 0.16s, border 0.18s, filter 0.2s;
+      user-select: none;
+      white-space: nowrap;
+      box-sizing: border-box;
+    }
+    .reveal-btn:active {
+      background: var(--green);
+      color: var(--btn-bg);
+      border-color: var(--green-bold);
+    }
+    .reveal-btn[disabled], .reveal-btn.disabled {
+      background: var(--btn-disabled);
+      color: var(--gray);
+      border-color: #454d59;
+      cursor: not-allowed;
+      filter: grayscale(0.45) brightness(0.98);
+      pointer-events: none;
+    }
+    /* Flag next to country */
+    .flag-icon {
+      width: 22px;
+      height: 16px;
+      border-radius: 3px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.09);
+      margin-right: 6px;
+      vertical-align: middle;
+      display: inline-block;
+      object-fit: cover;
+      border: 1px solid #23282f;
+      background: #fff;
+      position: relative; top: 2px;
     }
 
-    #loading-bar-container {
-      width: 100%;
-      max-width: 400px;
-      height: 6px;
-      background-color: #333;
-      border-radius: 4px;
-      overflow: hidden;
-      margin: 10px auto;
-      display: none;
+    /* Reveal content */
+    .reveal-content {
+      margin: 10px 0 3px 0;
+      padding: 12px 16px;
+      background: #191e25;
+      border-radius: 10px;
+      color: var(--white);
+      font-size: 1.09rem;
+      font-family: 'Inter', Arial, sans-serif;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      border-left: 3px solid var(--green);
+      min-height: 22px;
+      position: relative;
+      animation: fadeIn 0.6s cubic-bezier(0.66,0.0,0.36,1.0);
+      word-break: break-word;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(10px);}
+      100% { opacity: 1; transform: translateY(0);}
     }
 
-    #loading-bar {
-      width: 0%;
-      height: 100%;
-      background-color: #00ffcc;
-      animation: loadBar 1s linear forwards;
+    /* FAQ, Info, Footer */
+    .extra-section {
+      margin-top: 38px;
+      margin-bottom: 10px;
+      background: #181d24;
+      border-radius: 11px;
+      padding: 20px 15px 18px 15px;
+      color: var(--white);
+      font-size: 1.05rem;
+      box-shadow: 0 1.5px 7px rgba(0,0,0,0.06);
+      border-left: 4px solid var(--green);
     }
-
-    @keyframes loadBar {
-      from { width: 0%; }
-      to { width: 100%; }
+    .extra-section h2 {
+      color: var(--green);
+      font-family: 'Inter', Arial, sans-serif;
+      font-size: 1.21rem;
+      margin-top: 2px; margin-bottom: 13px;
+      font-weight: 700;
     }
-
-    @media (max-width: 600px) {
-      .ip-display-wrapper {
-        justify-content: center;
-        gap: 8px;
-      }
-
-      .ip-display {
-        font-size: 1.6rem;
-      }
-
-      .info-item {
-        font-size: 1.1rem;
-      }
-
-      .buttons {
+    .extra-section ul, .extra-section li {
+      color: var(--white);
+      font-size: 1.04rem;
+      line-height: 1.54em;
+      margin-left: 0;
+      padding-left: 0;
+      list-style-type: disc;
+    }
+    .extra-section strong {
+      color: var(--green-bold);
+      font-weight: 700;
+    }
+    .faq-list { margin-top: 12px; margin-bottom: 4px; }
+    .faq-list li { margin-bottom: 10px; }
+    .footer {
+      text-align: center;
+      margin-top: 38px;
+      padding: 22px 0 7px 0;
+      color: var(--gray);
+      font-size: 0.97rem;
+      letter-spacing: 0.01em;
+    }
+    .footer a { color: var(--green); font-weight: 700; text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+    .footer .policy-links { margin-top: 8px; font-size: 0.98em;}
+    .footer .policy-links a { margin: 0 8px;}
+    /* Responsive grid for reveal buttons on mobile */
+    @media (max-width: 499px) {
+      .reveal-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: 10px;
+        margin-bottom: 10px;
       }
-
-      .buttons button {
-        width: 168px;
-        font-size: 0.95rem;
-        padding: 10px;
+      .reveal-btn {
+        min-width: 0;
+        width: 99%;
+        font-size: clamp(0.97rem, 4vw, 1.07rem);
+        padding: 10px 0;
       }
-
-      .copy-btn {
-        transform: translateY(0);
-        font-size: 0.85rem;
-        padding: 6px 10px;
-        white-space: nowrap;
-      }
+    }
+    /* Small screens: shrink loader */
+    @media (max-width: 400px) {
+      .circular-loader, .loader-perc { width: 62px; height: 62px; font-size: 1.11rem; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="ad-slot" id="ad-top">[Top Ad Placeholder]</div>
-    <h1>Your IP Address is:</h1>
-    <div id="loading-bar-container"><div id="loading-bar"></div></div>
-    <div class="ip-display-wrapper">
-      <div id="ip" class="ip-display" style="display: none;"></div>
-      <button id="copyBtn" class="copy-btn" style="display: none;" onclick="copyIP()">Copy IP</button>
-    </div>
-    <div id="info-output" class="info-block"></div>
-    <div class="buttons">
-      <button onclick="loadInfo('location', this)">Show Location</button>
-      <button onclick="loadInfo('isp', this)">Show ISP Info</button>
-      <button onclick="loadInfo('asn', this)">Show ASN</button>
-      <button onclick="loadInfo('timezone', this)">Show Timezone</button>
-    </div>
-    <div class="ad-slot" id="ad-bottom">[Bottom Ad Placeholder]</div>
+  <!-- Ad placeholder: HEADER -->
+  <div class="ad-placeholder" aria-label="Ad placeholder, header" id="ad-header">
+    [Ad space: header]
   </div>
-  <div class="footer-ad" id="ad-footer">[Sticky Footer Ad Placeholder]</div>
-
+  <!-- Main content container -->
+  <div class="container" id="main-content" style="display:none;">
+    <!-- Mini info row -->
+    <div class="mini-info" id="mini-info">
+      <!-- JS: Browser, OS, Screen, IP type -->
+    </div>
+    <!-- IP -->
+    <div class="ip-label">Your IP Address is:</div>
+    <div class="ip-row">
+      <span class="ip-value" id="ip-address">...</span>
+      <button class="btn-copy" id="copy-ip-btn" aria-label="Copy IP to clipboard">Copy IP</button>
+    </div>
+    <div class="ip-desc">
+      This is your public IP address, shown for privacy and troubleshooting purposes.
+    </div>
+    <!-- Reveal buttons -->
+    <div class="reveal-row">
+      <button class="reveal-btn" id="btn-location">Show Location</button>
+      <button class="reveal-btn" id="btn-isp">Show ISP</button>
+      <button class="reveal-btn" id="btn-asn">Show ASN</button>
+      <button class="reveal-btn" id="btn-tz">Show Timezone</button>
+    </div>
+    <!-- Reveal content -->
+    <div id="reveal-location"></div>
+    <div id="reveal-isp"></div>
+    <div id="reveal-asn"></div>
+    <div id="reveal-tz"></div>
+    <!-- Ad placeholder: MIDDLE -->
+    <div class="ad-placeholder ad-middle" aria-label="Ad placeholder, middle" id="ad-middle">
+      [Ad space: middle]
+    </div>
+    <!-- EDUKATIVNI BLOK / FAQ -->
+    <div class="extra-section" id="faq-section">
+      <h2>What is my IP and why does it matter?</h2>
+      <ul class="faq-list">
+        <li><strong>IP address</strong> identifies your device online. It lets websites, apps, and services know where to send and receive information.</li>
+        <li><strong>ISP</strong> (Internet Service Provider) is the company that gives you internet access. Your IP is usually assigned by your ISP.</li>
+        <li><strong>ASN</strong> (Autonomous System Number) is a unique identifier for networks that exchange internet traffic. Each ISP or large network has its ASN.</li>
+        <li><strong>IPv4</strong> and <strong>IPv6</strong> are two protocols for addressing devices. IPv4 is the older, most common format; IPv6 is newer and offers more addresses.</li>
+        <li>Your IP address and location are only approximate and cannot reveal your physical address.</li>
+      </ul>
+      <h2>Privacy & Security</h2>
+      <ul class="faq-list">
+        <li>This site does not store your IP address or any other personal data.</li>
+        <li>Ads may be shown for monetization, but no sensitive data is collected or shared.</li>
+        <li>For more information, see our <a href="#privacy-policy">Privacy Policy</a>.</li>
+      </ul>
+    </div>
+    <!-- FOOTER -->
+    <div class="footer">
+      <div>© 2025 Dragan & AI | Simple IP Checker Tool</div>
+      <div class="policy-links">
+        <a href="#about">About</a> |
+        <a href="#privacy-policy">Privacy Policy</a> |
+        <a href="mailto:youremail@example.com">Contact</a>
+      </div>
+    </div>
+  </div>
+  <!-- Loader: visible on page load, hidden after data loads -->
+  <div class="loader-outer" id="loader">
+    <div class="circular-loader">
+      <svg width="80" height="80" viewBox="0 0 80 80">
+        <defs>
+          <linearGradient id="loader-gradient" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#fff" />
+            <stop offset="100%" stop-color="#00ff9f" />
+          </linearGradient>
+        </defs>
+        <circle class="circular-bg" cx="40" cy="40" r="34" fill="none"/>
+        <circle class="circular-bar" id="loader-bar" cx="40" cy="40" r="34" fill="none"
+          stroke-dasharray="0 999" stroke-dashoffset="0"/>
+      </svg>
+      <div class="loader-perc" id="loader-perc">0%</div>
+    </div>
+  </div>
+  <!-- Sticky footer ad (desktop only) -->
+  <div class="ad-sticky" id="ad-sticky" aria-label="Ad placeholder, sticky bottom">
+    [Ad space: sticky bottom]
+  </div>
+  <!-- Main script: JS for all interaktivnost i logiku -->
   <script>
-    function copyIP() {
-      const ipText = document.getElementById('ip').textContent;
-      navigator.clipboard.writeText(ipText).then(() => {
-        const btn = document.getElementById('copyBtn');
-        const original = btn.textContent;
-        btn.textContent = 'Copied!';
-        setTimeout(() => {
-          btn.textContent = original;
-        }, 2000);
+    // -------- LOADER ANIMATION --------
+    function animateLoader(duration = 1000) {
+      const loaderBar = document.getElementById('loader-bar');
+      const loaderPerc = document.getElementById('loader-perc');
+      let start = null;
+      const circle = 2 * Math.PI * 34; // r = 34
+      function step(ts) {
+        if (!start) start = ts;
+        let progress = Math.min((ts - start) / duration, 1);
+        let percent = Math.round(progress * 100);
+        // Color lerp: white (0) -> green (100)
+        let green = progress;
+        let color = `rgb(${255 - Math.round(255*green)},255,159)`;
+        loaderPerc.textContent = percent + '%';
+        loaderPerc.style.color = `rgb(${255 - Math.round(255*green)},255,159)`;
+        loaderBar.setAttribute('stroke-dasharray', `${circle * progress} ${circle * (1 - progress) + 1}`);
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+    animateLoader();
+
+    // Hide loader, show content after 1s
+    setTimeout(() => {
+      document.getElementById('loader').style.display = 'none';
+      document.getElementById('main-content').style.display = 'block';
+    }, 1000);
+
+    // -------- MINI-INFO (browser, OS, screen, IP type) --------
+    function detectMiniInfo(ipType) {
+      // Browser name/version
+      let ua = navigator.userAgent;
+      let browser = 'Browser';
+      let version = '';
+      let os = '';
+      if (ua.indexOf('Firefox') > -1) {
+        browser = 'Firefox';
+        version = ua.split('Firefox/')[1]?.split(' ')[0] || '';
+      } else if (ua.indexOf('Edg') > -1) {
+        browser = 'Edge';
+        version = ua.split('Edg/')[1]?.split(' ')[0] || '';
+      } else if (ua.indexOf('Chrome') > -1) {
+        browser = 'Chrome';
+        version = ua.split('Chrome/')[1]?.split(' ')[0] || '';
+      } else if (ua.indexOf('Safari') > -1) {
+        browser = 'Safari';
+        version = ua.split('Version/')[1]?.split(' ')[0] || '';
+      }
+      // OS detection
+      if (ua.indexOf('Windows NT 10') > -1) os = 'Windows 10';
+      else if (ua.indexOf('Windows NT 11') > -1) os = 'Windows 11';
+      else if (ua.indexOf('Windows NT 6.1') > -1) os = 'Windows 7';
+      else if (ua.indexOf('Mac') > -1) os = 'macOS';
+      else if (ua.indexOf('Linux') > -1) os = 'Linux';
+      else if (/Android/i.test(ua)) os = 'Android';
+      else if (/iPhone|iPad|iPod/i.test(ua)) os = 'iOS';
+      // Screen
+      let scr = window.screen.width + 'x' + window.screen.height;
+      document.getElementById('mini-info').textContent =
+        `Browser: ${browser} ${version} | OS: ${os} | Screen: ${scr} | IP type: ${ipType || '...'}`;
+    }
+
+    // -------- IP DETEKCIJA + GEO --------
+    let userData = {
+      ip: '...',
+      type: 'IPv4',
+      country: '', region: '', city: '', flag: '',
+      isp: '', asn: '', asname: '', timezone: '', tzOffset: '',
+      loc: ''
+    };
+    // FREE GEO API: first ipinfo.io (no key), fallback ip-api.com
+    function fetchIPData() {
+      fetch('https://ipinfo.io/json?token=') // No token needed for basic info
+      .then(resp => resp.json())
+      .then(data => {
+        userData.ip = data.ip || '...';
+        userData.loc = data.loc || '';
+        userData.country = data.country || '';
+        userData.region = data.region || '';
+        userData.city = data.city || '';
+        userData.asn = (data.org||'').split(' ')[0] || '';
+        userData.asname = (data.org||'').split(' ').slice(1).join(' ') || '';
+        userData.isp = data.org ? data.org : '';
+        userData.timezone = data.timezone || '';
+        // IP Type (detect v4/v6)
+        userData.type = userData.ip.indexOf(':') > -1 ? 'IPv6' : 'IPv4';
+        // Flag
+        if (userData.country) {
+          userData.flag = `https://flagcdn.com/24x18/${userData.country.toLowerCase()}.png`;
+        }
+        updateUI();
+        detectMiniInfo(userData.type);
+      })
+      .catch(() => {
+        // Fallback: ip-api.com
+        fetch('https://ip-api.io/json')
+        .then(resp=>resp.json())
+        .then(data=>{
+          userData.ip = data.ip || '...';
+          userData.country = data.country_code || '';
+          userData.region = data.region_name || '';
+          userData.city = data.city || '';
+          userData.flag = data.country_code ? `https://flagcdn.com/24x18/${data.country_code.toLowerCase()}.png` : '';
+          userData.asn = data.asn || '';
+          userData.asname = data.organization || '';
+          userData.isp = data.organization || '';
+          userData.timezone = data.timezone || '';
+          userData.type = data.version || '';
+          updateUI();
+          detectMiniInfo(userData.type);
+        });
       });
     }
+    function updateUI() {
+      // IP
+      document.getElementById('ip-address').textContent = userData.ip;
+      // Flag ready
+      // Copy IP
+      let copyBtn = document.getElementById('copy-ip-btn');
+      copyBtn.classList.remove('copied');
+      copyBtn.textContent = "Copy IP";
+    }
+    fetchIPData();
 
-    window.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('loading-bar-container').style.display = 'block';
-      setTimeout(() => {
-        fetch('https://api.ipify.org?format=json')
-          .then(res => res.json())
-          .then(data => {
-            document.getElementById('ip').textContent = data.ip;
-            document.getElementById('loading-bar-container').style.display = 'none';
-            document.getElementById('ip').style.display = 'block';
-            document.getElementById('copyBtn').style.display = 'inline-block';
-          })
-          .catch(() => {
-            document.getElementById('ip').textContent = 'Error loading IP';
-            document.getElementById('loading-bar-container').style.display = 'none';
-            document.getElementById('ip').style.display = 'block';
-          });
-      }, 1000);
+    // -------- COPY IP --------
+    document.getElementById('copy-ip-btn').onclick = function() {
+      let val = userData.ip;
+      navigator.clipboard.writeText(val).then(()=>{
+        this.classList.add('copied');
+        this.textContent = "Copied!";
+        setTimeout(()=>{
+          this.classList.remove('copied');
+          this.textContent = "Copy IP";
+        }, 2200);
+      });
+    };
+
+    // -------- REVEAL BUTTONS + CONTENT --------
+    const revealBtns = [
+      { id: "btn-location",  target: "reveal-location",   field: "location" },
+      { id: "btn-isp",       target: "reveal-isp",        field: "isp" },
+      { id: "btn-asn",       target: "reveal-asn",        field: "asn" },
+      { id: "btn-tz",        target: "reveal-tz",         field: "timezone" }
+    ];
+    // Helper za rendering zastavice + lokacije
+    function renderFlag(flag, country) {
+      return flag ? `<img class="flag-icon" src="${flag}" alt="${country} flag">` : '';
+    }
+    // LOCATION BUTTON
+    document.getElementById('btn-location').onclick = function() {
+      this.disabled = true; this.classList.add('disabled');
+      let flag = renderFlag(userData.flag, userData.country);
+      let content = `${flag}${userData.city ? userData.city+', ' : ''}${userData.region ? userData.region+', ' : ''}${userData.country ? userData.country : ''}`;
+      if (!content.replace(/<[^>]+>/g,'').trim()) content = "Location not available.";
+      document.getElementById('reveal-location').innerHTML = `<div class="reveal-content">${content}</div>`;
+    };
+    // ISP BUTTON
+    document.getElementById('btn-isp').onclick = function() {
+      this.disabled = true; this.classList.add('disabled');
+      let content = userData.isp || "ISP information not available.";
+      document.getElementById('reveal-isp').innerHTML = `<div class="reveal-content">${content}</div>`;
+    };
+    // ASN BUTTON
+    document.getElementById('btn-asn').onclick = function() {
+      this.disabled = true; this.classList.add('disabled');
+      let content = userData.asn ? `ASN: <strong>${userData.asn}</strong> (${userData.asname})` : "ASN not available.";
+      document.getElementById('reveal-asn').innerHTML = `<div class="reveal-content">${content}</div>`;
+    };
+    // TIMEZONE BUTTON
+    document.getElementById('btn-tz').onclick = function() {
+      this.disabled = true; this.classList.add('disabled');
+      let time = '';
+      if (userData.timezone) {
+        let now = new Date().toLocaleString("en-US", {timeZone: userData.timezone, hour12: false});
+        time = `<br>Local time: <strong>${now}</strong>`;
+      }
+      let content = userData.timezone ? `Timezone: <strong>${userData.timezone}</strong>${time}` : "Timezone not available.";
+      document.getElementById('reveal-tz').innerHTML = `<div class="reveal-content">${content}</div>`;
+    };
+
+    // Accessibility: enable Enter/Space on buttons
+    document.querySelectorAll('.reveal-btn').forEach(btn=>{
+      btn.addEventListener('keydown',function(e){
+        if(e.key===' '||e.key==='Enter') this.click();
+      });
     });
 
-    function loadInfo(type, button) {
-      document.getElementById('loading-bar').style.width = '0%';
-      document.getElementById('loading-bar-container').style.display = 'block';
-      void document.getElementById('loading-bar').offsetWidth;
-
-      setTimeout(() => {
-        fetch('https://ipwhois.app/json/')
-          .then(res => res.json())
-          .then(data => {
-            let output = '';
-
-            switch (type) {
-              case 'location':
-                output += `<div class="info-item"><span class="info-label">Country: </span><span class="info-value">${data.country}<img class="flag" src="https://flagsapi.com/${data.country_code}/flat/32.png" alt="${data.country} flag"></span></div>`;
-                output += `<div class="info-item"><span class="info-label">City: </span><span class="info-value">${data.city}</span></div>`;
-                output += `<div class="info-item"><span class="info-label">Region: </span><span class="info-value">${data.region}</span></div>`;
-                break;
-              case 'isp':
-                output += `<div class="info-item"><span class="info-label">ISP: </span><span class="info-value">${data.isp}</span></div>`;
-                break;
-              case 'asn':
-                output += `<div class="info-item"><span class="info-label">ASN: </span><span class="info-value">${data.asn}</span></div>`;
-                output += `<div class="info-item"><span class="info-label">AS Name: </span><span class="info-value">${data.as}</span></div>`;
-                break;
-              case 'timezone':
-                output += `<div class="info-item"><span class="info-label">Timezone: </span><span class="info-value">${data.timezone}</span></div>`;
-                break;
-            }
-
-            const divider = document.createElement('div');
-            divider.className = 'divider';
-            document.getElementById('info-output').appendChild(divider);
-
-            const block = document.createElement('div');
-            block.innerHTML = output;
-            document.getElementById('info-output').appendChild(block);
-
-            document.getElementById('loading-bar-container').style.display = 'none';
-            button.disabled = true;
-          })
-          .catch(() => {
-            const errorMsg = document.createElement('div');
-            errorMsg.className = 'info-item';
-            errorMsg.textContent = 'Error loading data';
-            document.getElementById('info-output').appendChild(errorMsg);
-            document.getElementById('loading-bar-container').style.display = 'none';
-          });
-      }, 1000);
+    // Responsive resize: adjust font-size of .reveal-btn if overflow (edge-case)
+    function fitButtons() {
+      document.querySelectorAll('.reveal-btn').forEach(btn=>{
+        btn.style.fontSize = ""; // reset
+        let parentW = btn.offsetWidth, fs = 16, orig = btn.textContent;
+        btn.style.whiteSpace = "nowrap";
+        // shrink font if overflowing
+        while(btn.scrollWidth > parentW && fs > 11) {
+          fs -= 1;
+          btn.style.fontSize = fs + "px";
+        }
+      });
     }
+    window.addEventListener('resize', fitButtons);
+    setTimeout(fitButtons, 600);
+
+    // Keyboard accessibility: focus outline
+    document.querySelectorAll('button, a').forEach(el=>{
+      el.addEventListener('keyup', e=>{
+        if(e.key==='Tab') el.style.outline = "2px solid var(--green)";
+      });
+      el.addEventListener('blur', e=>{
+        el.style.outline = "";
+      });
+    });
   </script>
 </body>
 </html>
