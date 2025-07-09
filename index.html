@@ -1,15 +1,461 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- (isti head kao gore, izostavljen zbog dužine) -->
-  <!-- ... -->
+  <meta charset="UTF-8">
+  <title>IP & Browser Info | Dragan & ChatGPT 4.1 Project</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Check your public IP, location, ISP, ASN and timezone instantly. 100% private, minimalist and ad-optimized.">
+  <meta name="keywords" content="IP, IP address, ISP, ASN, geolocation, IPv4, IPv6, privacy, IP checker, browser info, Dragan, ChatGPT, AI collaboration">
+  <meta name="author" content="Dragan & ChatGPT 4.1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@200;400;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ... (isti CSS kao u prethodnim verzijama) ... */
+    :root {
+      --bg: #0a0e11;
+      --green: #84c677;
+      --green-dark: #4d7846;
+      --white: #fff;
+      --gray: #c3c3c3;
+      --text: #fff;
+      --faq-bg: #111417;
+      --faq-border: #84c677;
+    }
+    html, body {
+      margin: 0; padding: 0;
+      font-family: 'Albert Sans', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      width: 100vw;
+      min-height: 100vh;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      justify-content: flex-start;
+      align-items: center;
+    }
+    main {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto 40px auto;
+      box-sizing: border-box;
+      padding: 0 40px;
+    }
+    @media (max-width: 700px) {
+      main { padding: 0 8vw; }
+    }
+    @media (max-width: 500px) {
+      main { padding: 0 4vw; }
+    }
+    .ad-header, .ad-middle, .ad-sticky {
+      width: 100%;
+      min-height: 56px;
+      margin: 0 0 32px 0;
+      background: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray);
+      border-radius: 10px;
+      font-size: 18px;
+      font-style: italic;
+      border: 1.5px dashed var(--green);
+      opacity: 0.85;
+    }
+    .ad-middle {
+      margin: 40px 0 40px 0;
+    }
+    .ad-sticky {
+      position: fixed;
+      left: 0; bottom: 0;
+      width: 100vw;
+      background: var(--bg);
+      border-top: 1.5px solid var(--green-dark);
+      min-height: 48px;
+      z-index: 999;
+      box-shadow: 0 -2px 14px rgba(0,0,0,0.14);
+      font-size: 18px;
+    }
+    @media (max-width: 700px) {
+      .ad-header, .ad-middle { font-size: 16px; }
+      .ad-sticky { font-size: 16px;}
+    }
+    @media (max-width: 600px) {
+      .ad-sticky { display: none;}
+    }
+    .mini-info {
+      margin-top: 24px;
+      color: var(--gray);
+      font-family: 'Albert Sans', Arial, sans-serif;
+      font-size: 20pt;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+    .main-title {
+      font-family: 'Albert Sans', Arial, sans-serif;
+      font-weight: 200;
+      font-size: 28pt;
+      text-align: center;
+      color: var(--white);
+      margin-bottom: 12px;
+      margin-top: 0;
+      letter-spacing: 0.01em;
+    }
+    .ip-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+    .ip-value {
+      font-family: 'Albert Sans', Arial, sans-serif;
+      font-weight: 900;
+      font-size: 62pt;
+      letter-spacing: 0.03em;
+      color: var(--green);
+      line-height: 1.06em;
+      background: none;
+      border: none;
+      outline: none;
+      user-select: all;
+      cursor: default;
+      padding: 0;
+    }
+    .ip-desc {
+      text-align: center;
+      color: var(--gray);
+      font-family: 'Albert Sans', Arial, sans-serif;
+      font-weight: 400;
+      font-size: 20pt;
+      margin-bottom: 30px;
+      margin-top: 2px;
+      line-height: 1.42em;
+    }
+    .reveal-zone {
+      margin-bottom: 40px;
+    }
+    .reveal-answers {
+      margin-bottom: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      width: 100%;
+      align-items: stretch;
+    }
+    .reveal-answer {
+      background: none;
+      color: var(--white);
+      font-family: 'Albert Sans', Arial, sans-serif;
+      font-weight: 200;
+      font-size: 20pt;
+      padding: 24px 28px 20px 28px;
+      border-radius: 17px;
+      box-sizing: border-box;
+      position: relative;
+      word-break: break-word;
+      border: none;
+      box-shadow: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .reveal-answer:not(:last-child)::after {
+      content: "";
+      display: block;
+      position: absolute;
+      bottom: -12px; left: 50%; transform: translateX(-50%);
+      width: 80%;
+      height: 3px;
+      background: var(--green);
+      border-radius: 5px;
+      opacity: 1;
+    }
+    .flag {
+      width: 29px; height: 21px;
+      border-radius: 3px;
+      margin-left: 16px;
+      margin-bottom: -3px;
+      object-fit: cover;
+      border: 1px solid #e6e6e6;
+      background: #fff;
+      vertical-align: middle;
+      display: inline-block;
+    }
+    .reveal-buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 32px;
+      margin-bottom: 4px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .reveal-btn {
+      font-family: 'Albert Sans', Arial, sans-serif;
+      font-weight: 700;
+      font-size: 19pt;
+      color: var(--white);
+      background: var(--green);
+      border: none;
+      border-radius: 14px;
+      min-width: 146px;
+      min-height: 62px;
+      padding: 6px 18px;
+      margin-bottom: 0;
+      cursor: pointer;
+      box-shadow: 0 1.5px 7px rgba(132,198,119,0.10);
+      transition: background 0.13s, color 0.13s, filter 0.16s;
+      user-select: none;
+      outline: none;
+      letter-spacing: 0.01em;
+      white-space: normal;
+      word-break: break-word;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .reveal-btn:focus { outline: 2.5px solid var(--green-dark);}
+    .reveal-btn:active,
+    .reveal-btn.disabled,
+    .reveal-btn[disabled] {
+      background: var(--green-dark);
+      color: var(--white);
+      filter: brightness(0.93);
+      cursor: not-allowed;
+      pointer-events: none;
+      opacity: 0.9;
+    }
+    @media (max-width: 800px) {
+      .reveal-btn { min-width: 112px; font-size: 17pt; }
+    }
+    @media (max-width: 599px) {
+      .reveal-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+      .reveal-btn {
+        min-width: 0;
+        width: 100%;
+        font-size: 17pt;
+        min-height: 56px;
+        padding: 8px 0;
+      }
+      .reveal-answer {
+        font-size: 18pt;
+        padding: 19px 10vw 15px 10vw;
+      }
+    }
+    .motivation {
+      margin: 55px 0 38px 0;
+      text-align: center;
+      color: var(--white);
+    }
+    .motivation h2 {
+      font-size: 20pt;
+      font-family: 'Albert Sans', Arial, sans-serif;
+      font-weight: 400;
+      margin: 0 0 12px 0;
+      color: var(--green);
+    }
+    .motivation strong {
+      font-family: 'Albert Sans', Arial, sans-serif;
+      font-weight: 800;
+      color: var(--green);
+      font-size: 20pt;
+    }
+    .motivation .sub {
+      color: var(--white);
+      font-size: 20pt;
+      font-family: 'Albert Sans', Arial, sans-serif;
+      font-weight: 400;
+    }
+    .motivation p {
+      font-size: 20pt;
+      margin: 0;
+      color: var(--white);
+      font-weight: 400;
+      line-height: 1.3em;
+    }
+    .faq-section {
+      background: var(--faq-bg);
+      border-left: 7px solid var(--faq-border);
+      border-radius: 16px;
+      margin: 64px 0 30px 0;
+      padding: 32px 30px 30px 30px;
+      color: var(--white);
+      font-size: 20pt;
+      font-family: 'Albert Sans', Arial, sans-serif;
+      font-weight: 400;
+      box-sizing: border-box;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.09);
+    }
+    .faq-section h2 {
+      color: var(--green);
+      font-size: 20pt;
+      font-family: 'Albert Sans', Arial, sans-serif;
+      font-weight: 800;
+      margin: 0 0 22px 0;
+    }
+    .faq-section ul,
+    .faq-section li {
+      color: var(--white);
+      font-size: 20pt;
+      font-family: 'Albert Sans', Arial, sans-serif;
+      font-weight: 400;
+      margin: 0;
+      padding: 0;
+      list-style-type: disc;
+      line-height: 1.55em;
+    }
+    .faq-section li { margin-bottom: 13px;}
+    .faq-section strong {
+      color: var(--green);
+      font-weight: 800;
+    }
+    .faq-section a { color: var(--green);}
+    .extra-section {
+      margin-top: 54px;
+      margin-bottom: 16px;
+      background: transparent;
+      border-radius: 13px;
+      padding: 0;
+      color: var(--white);
+      font-size: 20pt;
+      box-shadow: none;
+      border-left: none;
+    }
+    .extra-section h2 {
+      color: var(--green);
+      font-family: 'Albert Sans', Arial, sans-serif;
+      font-size: 20pt;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .extra-section p, .extra-section a {
+      color: var(--white);
+      font-size: 20pt;
+      font-family: 'Albert Sans', Arial, sans-serif;
+      font-weight: 400;
+    }
+    .extra-section a { color: var(--green); text-decoration: underline;}
+    .footer {
+      text-align: center;
+      margin-top: 42px;
+      margin-bottom: 18px;
+      color: var(--gray);
+      font-size: 20pt;
+      font-family: 'Albert Sans', Arial, sans-serif;
+      font-weight: 400;
+    }
+    .footer .policy-links { margin-top: 12px; font-size: 20pt;}
+    .footer .policy-links a {
+      margin: 0 11px;
+      color: var(--green);
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .footer .policy-links a:hover { text-decoration: underline;}
+    @media (max-width: 599px) {
+      .footer, .footer .policy-links { font-size: 18pt;}
+      .faq-section, .extra-section, .faq-section ul, .faq-section li, .extra-section p { font-size: 18pt;}
+      .ad-header, .ad-middle, .ad-sticky { font-size: 16pt;}
+    }
+  </style>
 </head>
 <body>
-  <!-- (isti body kao gore, izostavljen zbog dužine) -->
-  <!-- ... -->
+  <div class="ad-header" id="ad-header">[Ad space: header]</div>
+  <main>
+    <div class="mini-info" id="mini-info"></div>
+    <div class="main-title">Your IP Address is:</div>
+    <div class="ip-row">
+      <span class="ip-value" id="ip-address">...</span>
+    </div>
+    <div class="ip-desc">This is your public IP address, shown for privacy and troubleshooting purposes.</div>
+    <div class="reveal-zone">
+      <div class="reveal-answers" id="reveal-answers"></div>
+      <div class="reveal-buttons">
+        <button class="reveal-btn" id="btn-location" disabled>Location</button>
+        <button class="reveal-btn" id="btn-isp" disabled>ISP</button>
+        <button class="reveal-btn" id="btn-asn" disabled>ASN</button>
+        <button class="reveal-btn" id="btn-tz" disabled>Timezone</button>
+      </div>
+    </div>
+    <div class="ad-middle" id="ad-middle">[Ad space: middle]</div>
+    <section class="motivation" id="motivation">
+      <h2>Anyone can build. <span class="sub">With AI, everyone can create.</span></h2>
+      <p>
+        This project was built to test and showcase the real possibilities of modern AI-human collaboration.<br>
+        <strong>If you have ideas, curiosity, or ambition, don't let “I can't code” stop you.</strong><br><br>
+        With the right mindset, clear goals, and a bit of AI help, you can launch a real, working product — even if it's your very first attempt.<br><br>
+        <strong>Try, learn, build. What you imagine, you can now create.</strong>
+      </p>
+    </section>
+    <section class="faq-section" id="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <ul>
+        <li><strong>What is an IP address?</strong><br>
+          An IP address is a unique identifier for your device on the internet. It helps websites and services route information to you.</li>
+        <li><strong>Can my IP address reveal my location?</strong><br>
+          Your IP address can give a rough approximation of your city or country, but never your precise physical address.</li>
+        <li><strong>What is an ISP?</strong><br>
+          ISP stands for Internet Service Provider. It's the company that provides you with internet access and assigns your public IP.</li>
+        <li><strong>What is an ASN?</strong><br>
+          ASN stands for Autonomous System Number, a unique code for networks that exchange traffic on the internet.</li>
+        <li><strong>What are IPv4 and IPv6?</strong><br>
+          IPv4 and IPv6 are different versions of IP addressing. IPv4 is the original format (e.g. 192.168.0.1), while IPv6 is newer and longer (e.g. 2001:db8::1).</li>
+        <li><strong>How can I change my IP address?</strong><br>
+          Usually, you can change your public IP by restarting your router or connecting through a VPN.</li>
+        <li><strong>Is my data safe on this site?</strong><br>
+          Yes. We do not store or share any of your IP or browsing data. All info is shown only to you, in your browser.</li>
+      </ul>
+    </section>
+    <section class="extra-section" id="about">
+      <h2>About this project</h2>
+      <p>
+        This website is the result of a unique collaboration between Dragan (designer, idea man, and relentless tester) and ChatGPT 4.1 (coding AI, never sleeps, always ships clean code).<br><br>
+        Conceived as a minimalist, lightning-fast IP info tool, it was designed entirely by Dragan — and coded line-by-line by ChatGPT 4.1, with no prior web development experience required from Dragan himself.<br><br>
+        Every feature, color, and idea is the result of a true “human + AI” workflow.<br><br>
+        We’re proud to present a site that proves: with good instructions and modern AI, anyone can build a professional product from scratch!
+      </p>
+    </section>
+    <section class="extra-section" id="privacy-policy">
+      <h2>Privacy Policy</h2>
+      <p>
+        <strong>Your privacy is our priority.</strong> This website does not store, share, or sell your IP address, location, or any other personal data.<br><br>
+        Data shown (such as IP address, city, ISP, etc.) is fetched in real time from third-party public APIs and displayed only in your browser session — we never collect, save, or analyze any of this information.<br><br>
+        We display Google Adsense ads for monetization. These ads are provided by Google and may use cookies or other tracking technologies as described in <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer">Google's Privacy & Terms</a>.<br><br>
+        For questions about your data or privacy, feel free to contact us at the email below.
+      </p>
+    </section>
+    <section class="extra-section" id="contact">
+      <h2>Contact</h2>
+      <p>
+        For feedback, bug reports, or collaboration requests, please email:<br>
+        <a href="mailto:youremail@example.com">youremail@example.com</a>
+      </p>
+    </section>
+    <div class="footer">
+      &copy; 2025 Dragan & ChatGPT 4.1 Project | Simple IP Checker Tool
+      <div class="policy-links">
+        <a href="#about">About</a> |
+        <a href="#privacy-policy">Privacy Policy</a> |
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </main>
+  <div class="ad-sticky" id="ad-sticky" aria-label="Ad placeholder, sticky bottom">
+    [Ad space: sticky bottom]
+  </div>
   <script>
     window.onload = function() {
-      // MINI INFO: Browser name/version, IP type
       function detectMiniInfo(ipType) {
         let ua = navigator.userAgent;
         let browser = 'Browser';
@@ -31,23 +477,18 @@
         if (ipType) out += ` | IP type: ${ipType}`;
         document.getElementById('mini-info').textContent = out;
       }
-
-      // IP DATA (use ipwho.is as main, fallback to ipinfo)
       let userData = {
         ip: '...',
         type: '',
         country: '', region: '', city: '', flag: '',
         isp: '', asn: '', asname: '', timezone: ''
       };
-
-      // Make sure buttons are enabled only after data loads
       function enableRevealButtons() {
         document.querySelectorAll('.reveal-btn').forEach(btn => {
           btn.disabled = false;
           btn.classList.remove('disabled');
         });
       }
-
       function fetchIPData() {
         fetch('https://ipwho.is/')
           .then(resp => resp.json())
@@ -67,7 +508,6 @@
             enableRevealButtons();
           })
           .catch(() => {
-            // fallback ipinfo.io
             fetch('https://ipinfo.io/json')
               .then(resp => resp.json())
               .then(data => {
@@ -91,8 +531,6 @@
         document.getElementById('ip-address').textContent = userData.ip;
       }
       fetchIPData();
-
-      // REVEAL BUTTONS + ANSWERS
       const answersZone = document.getElementById('reveal-answers');
       const btnMap = [
         { id: "btn-location",  label: "Location", getContent: () => {
@@ -129,7 +567,6 @@
           return txt;
         }}
       ];
-      // answers state
       let opened = [];
       btnMap.forEach((b, i) => {
         const btn = document.getElementById(b.id);
@@ -148,20 +585,16 @@
           answersZone.innerHTML += html;
         });
       }
-
-      // Accessibility: Enter/Space on buttons
       document.querySelectorAll('.reveal-btn').forEach(btn=>{
         btn.addEventListener('keydown',function(e){
           if(e.key===' '||e.key==='Enter') this.click();
         });
       });
-      // Auto resize text on reveal-btn if needed
       function fitButtons() {
         document.querySelectorAll('.reveal-btn').forEach(btn=>{
-          btn.style.fontSize = ""; // reset
-          let parentW = btn.offsetWidth, fs = 19, orig = btn.textContent;
+          btn.style.fontSize = "";
+          let parentW = btn.offsetWidth, fs = 19;
           btn.style.whiteSpace = "nowrap";
-          // shrink font if overflowing
           while(btn.scrollWidth > parentW && fs > 11) {
             fs -= 1;
             btn.style.fontSize = fs + "px";
@@ -170,8 +603,6 @@
       }
       window.addEventListener('resize', fitButtons);
       setTimeout(fitButtons, 600);
-
-      // Keyboard accessibility: focus outline
       document.querySelectorAll('button, a').forEach(el=>{
         el.addEventListener('keyup', e=>{
           if(e.key==='Tab') el.style.outline = "2px solid var(--green)";
