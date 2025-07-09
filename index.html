@@ -122,7 +122,6 @@
       font-size: 62pt;
       letter-spacing: 0.03em;
       color: var(--green);
-      margin-right: 16px;
       line-height: 1.06em;
       background: none;
       border: none;
@@ -131,26 +130,6 @@
       cursor: default;
       padding: 0;
     }
-    .btn-copy {
-      font-family: 'Albert Sans', Arial, sans-serif;
-      font-weight: 700;
-      font-size: 20pt;
-      color: var(--white);
-      background: var(--green);
-      border: none;
-      border-radius: 13px;
-      padding: 12px 22px;
-      cursor: pointer;
-      transition: background 0.18s, color 0.15s, filter 0.17s;
-      box-shadow: 0 1.5px 8px rgba(132,198,119,0.07);
-    }
-    .btn-copy:active,
-    .btn-copy.copied {
-      background: var(--green-dark);
-      color: var(--white);
-      filter: brightness(0.95);
-    }
-    .btn-copy:focus { outline: 2.5px solid var(--green);}
     /* IP desc */
     .ip-desc {
       text-align: center;
@@ -412,10 +391,9 @@
     </div>
     <!-- MAIN TITLE -->
     <div class="main-title">Your IP Address is:</div>
-    <!-- IP ADDRESS + COPY -->
+    <!-- IP ADDRESS (NO COPY BUTTON) -->
     <div class="ip-row">
       <span class="ip-value" id="ip-address">...</span>
-      <button class="btn-copy" id="copy-ip-btn" aria-label="Copy IP to clipboard">Copy IP</button>
     </div>
     <div class="ip-desc">This is your public IP address, shown for privacy and troubleshooting purposes.</div>
     <!-- REVEAL ZONE -->
@@ -424,10 +402,10 @@
       <div class="reveal-answers" id="reveal-answers"></div>
       <!-- REVEAL BUTTONS -->
       <div class="reveal-buttons">
-        <button class="reveal-btn" id="btn-location">Location</button>
-        <button class="reveal-btn" id="btn-isp">ISP</button>
-        <button class="reveal-btn" id="btn-asn">ASN</button>
-        <button class="reveal-btn" id="btn-tz">Timezone</button>
+        <button class="reveal-btn" id="btn-location" disabled>Location</button>
+        <button class="reveal-btn" id="btn-isp" disabled>ISP</button>
+        <button class="reveal-btn" id="btn-asn" disabled>ASN</button>
+        <button class="reveal-btn" id="btn-tz" disabled>Timezone</button>
       </div>
     </div>
     <!-- AD MIDDLE -->
@@ -533,6 +511,15 @@
       country: '', region: '', city: '', flag: '',
       isp: '', asn: '', asname: '', timezone: ''
     };
+
+    // Make sure buttons are enabled only after data loads
+    function enableRevealButtons() {
+      document.querySelectorAll('.reveal-btn').forEach(btn => {
+        btn.disabled = false;
+        btn.classList.remove('disabled');
+      });
+    }
+
     function fetchIPData() {
       fetch('https://ipwho.is/')
         .then(resp => resp.json())
@@ -549,6 +536,7 @@
           userData.timezone = data.timezone?.id || '';
           updateUI();
           detectMiniInfo(userData.type);
+          enableRevealButtons();
         })
         .catch(() => {
           // fallback ipinfo.io
@@ -567,30 +555,14 @@
               userData.timezone = data.timezone || '';
               updateUI();
               detectMiniInfo(userData.type);
+              enableRevealButtons();
             });
         });
     }
     function updateUI() {
       document.getElementById('ip-address').textContent = userData.ip;
-      // copy reset
-      let copyBtn = document.getElementById('copy-ip-btn');
-      copyBtn.classList.remove('copied');
-      copyBtn.textContent = "Copy IP";
     }
     fetchIPData();
-
-    // COPY IP BUTTON
-    document.getElementById('copy-ip-btn').onclick = function() {
-      let val = userData.ip;
-      navigator.clipboard.writeText(val).then(()=>{
-        this.classList.add('copied');
-        this.textContent = "Copied!";
-        setTimeout(()=>{
-          this.classList.remove('copied');
-          this.textContent = "Copy IP";
-        }, 2000);
-      });
-    };
 
     // REVEAL BUTTONS + ANSWERS
     const answersZone = document.getElementById('reveal-answers');
@@ -633,7 +605,7 @@
     let opened = [];
     btnMap.forEach((b, i) => {
       document.getElementById(b.id).onclick = function() {
-        if (this.classList.contains('disabled')) return;
+        if (this.classList.contains('disabled') || this.disabled) return;
         this.classList.add('disabled');
         this.disabled = true;
         opened.push(i);
