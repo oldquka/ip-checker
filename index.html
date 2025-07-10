@@ -10,14 +10,13 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@200;400;700;800;900&display=swap" rel="stylesheet">
   <style>
-    /* ... (isti CSS kao u prethodnim verzijama) ... */
+    /* CSS ostaje isti kao prethodno... */
     :root {
       --bg: #0a0e11;
       --green: #84c677;
       --green-dark: #4d7846;
       --white: #fff;
       --gray: #c3c3c3;
-      --text: #fff;
       --faq-bg: #111417;
       --faq-border: #84c677;
     }
@@ -410,7 +409,7 @@
         <li><strong>What is an ASN?</strong><br>
           ASN stands for Autonomous System Number, a unique code for networks that exchange traffic on the internet.</li>
         <li><strong>What are IPv4 and IPv6?</strong><br>
-          IPv4 and IPv6 are different versions of IP addressing. IPv4 is the original format (e.g. 192.168.0.1), while IPv6 is newer and longer (e.g. 2001:db8::1).</li>
+          IPv4 and IPv6 are different versions of IP addressing. The original format is IPv4 (e.g. 192.168.0.1), while IPv6 is newer and longer (e.g. 2001:db8::1).</li>
         <li><strong>How can I change my IP address?</strong><br>
           Usually, you can change your public IP by restarting your router or connecting through a VPN.</li>
         <li><strong>Is my data safe on this site?</strong><br>
@@ -431,7 +430,7 @@
       <p>
         <strong>Your privacy is our priority.</strong> This website does not store, share, or sell your IP address, location, or any other personal data.<br><br>
         Data shown (such as IP address, city, ISP, etc.) is fetched in real time from third-party public APIs and displayed only in your browser session — we never collect, save, or analyze any of this information.<br><br>
-        We display Google Adsense ads for monetization. These ads are provided by Google and may use cookies or other tracking technologies as described in <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer">Google's Privacy & Terms</a>.<br><br>
+        We display Google Adsense ads for monetization. These ads are provided by Google and may use cookies or other tracking technologies as described in <a href=" https://policies.google.com/technologies/ads " target="_blank" rel="noopener noreferrer">Google's Privacy & Terms</a>.<br><br>
         For questions about your data or privacy, feel free to contact us at the email below.
       </p>
     </section>
@@ -490,7 +489,7 @@
         });
       }
       function fetchIPData() {
-        fetch('https://ipwho.is/')
+        fetch('https://ipwho.is/ ')
           .then(resp => resp.json())
           .then(data => {
             userData.ip = data.ip || '...';
@@ -498,7 +497,7 @@
             userData.country = data.country_code || '';
             userData.region = data.region || '';
             userData.city = data.city || '';
-            userData.flag = data.flag?.img || (userData.country ? `https://flagcdn.com/24x18/${userData.country.toLowerCase()}.png` : '');
+            userData.flag = data.flag?.img || (userData.country ? `https://flagcdn.com/24x18/ ${userData.country.toLowerCase()}.png` : '');
             userData.isp = data.connection?.isp || '';
             userData.asn = data.connection?.asn || '';
             userData.asname = data.connection?.org || '';
@@ -508,7 +507,7 @@
             enableRevealButtons();
           })
           .catch(() => {
-            fetch('https://ipinfo.io/json')
+            fetch('https://ipinfo.io/json ')
               .then(resp => resp.json())
               .then(data => {
                 userData.ip = data.ip || '...';
@@ -516,7 +515,7 @@
                 userData.country = data.country || '';
                 userData.region = data.region || '';
                 userData.city = data.city || '';
-                userData.flag = data.country ? `https://flagcdn.com/24x18/${data.country.toLowerCase()}.png` : '';
+                userData.flag = data.country ? `https://flagcdn.com/24x18/ ${data.country.toLowerCase()}.png` : '';
                 userData.isp = data.org ? data.org : '';
                 userData.asn = (data.org||'').split(' ')[0] || '';
                 userData.asname = (data.org||'').split(' ').slice(1).join(' ') || '';
@@ -570,14 +569,24 @@
       let opened = [];
       btnMap.forEach((b, i) => {
         const btn = document.getElementById(b.id);
-        btn.onclick = function() {
-          if (this.classList.contains('disabled') || this.disabled) return;
+        btn.onclick = function () {
+          // Samo proveravamo klasu 'disabled'
+          if (this.classList.contains('disabled')) return;
+
+          // Dodajemo klasu i postavljamo disabled da bi sprečili ponovno klikanje
           this.classList.add('disabled');
           this.disabled = true;
-          opened.push(i);
+
+          // Dodajemo indeks u listu otvorenih, ako već nije dodat
+          if (!opened.includes(i)) {
+            opened.push(i);
+          }
+
+          // Prikazujemo odgovarajući sadržaj
           renderAnswers();
-        }
+        };
       });
+
       function renderAnswers() {
         answersZone.innerHTML = '';
         opened.forEach(idx => {
@@ -585,6 +594,7 @@
           answersZone.innerHTML += html;
         });
       }
+
       document.querySelectorAll('.reveal-btn').forEach(btn=>{
         btn.addEventListener('keydown',function(e){
           if(e.key===' '||e.key==='Enter') this.click();
