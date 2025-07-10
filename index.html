@@ -2,626 +2,259 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>IP & Browser Info | Dragan & ChatGPT 4.1 Project</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Check your public IP, location, ISP, ASN and timezone instantly. 100% private, minimalist and ad-optimized.">
-  <meta name="keywords" content="IP, IP address, ISP, ASN, geolocation, IPv4, IPv6, privacy, IP checker, browser info, Dragan, ChatGPT, AI collaboration">
-  <meta name="author" content="Dragan & ChatGPT 4.1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@200;400;700;800;900&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IP Info</title>
+
+  <!-- Google Font: Albert Sans -->
+  <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;700&display=swap" rel="stylesheet">
+
   <style>
-    /* CSS ostaje isti kao prethodno... */
-    :root {
-      --bg: #0a0e11;
-      --green: #84c677;
-      --green-dark: #4d7846;
-      --white: #fff;
-      --gray: #c3c3c3;
-      --faq-bg: #111417;
-      --faq-border: #84c677;
-    }
-    html, body {
-      margin: 0; padding: 0;
-      font-family: 'Albert Sans', Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      width: 100vw;
-      min-height: 100vh;
-      box-sizing: border-box;
-      scroll-behavior: smooth;
-    }
+    /* Reset i globalne postavke */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; }
     body {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      justify-content: flex-start;
-      align-items: center;
+      font-family: 'Albert Sans', sans-serif;
+      background-color: #0a0e11;
+      color: #ffffff;
+      line-height: 1.6;
     }
-    main {
+    .container {
+      max-width: 1200px;
+      width: 90%;
+      margin: 0 auto;
+      padding: 20px 0;
+    }
+
+    /* HEADER – ovde ide AdSense kod */
+    header#ad-header {
       width: 100%;
-      max-width: 600px;
-      margin: 0 auto 40px auto;
-      box-sizing: border-box;
-      padding: 0 40px;
-    }
-    @media (max-width: 700px) {
-      main { padding: 0 8vw; }
-    }
-    @media (max-width: 500px) {
-      main { padding: 0 4vw; }
-    }
-    .ad-header, .ad-middle, .ad-sticky {
-      width: 100%;
-      min-height: 56px;
-      margin: 0 0 32px 0;
-      background: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--gray);
-      border-radius: 10px;
-      font-size: 18px;
-      font-style: italic;
-      border: 1.5px dashed var(--green);
-      opacity: 0.85;
-    }
-    .ad-middle {
-      margin: 40px 0 40px 0;
-    }
-    .ad-sticky {
-      position: fixed;
-      left: 0; bottom: 0;
-      width: 100vw;
-      background: var(--bg);
-      border-top: 1.5px solid var(--green-dark);
-      min-height: 48px;
-      z-index: 999;
-      box-shadow: 0 -2px 14px rgba(0,0,0,0.14);
-      font-size: 18px;
-    }
-    @media (max-width: 700px) {
-      .ad-header, .ad-middle { font-size: 16px; }
-      .ad-sticky { font-size: 16px;}
-    }
-    @media (max-width: 600px) {
-      .ad-sticky { display: none;}
-    }
-    .mini-info {
-      margin-top: 24px;
-      color: var(--gray);
-      font-family: 'Albert Sans', Arial, sans-serif;
-      font-size: 20pt;
-      font-weight: 400;
-      letter-spacing: 0.01em;
       text-align: center;
-      margin-bottom: 18px;
+      margin-bottom: 20px;
     }
-    .main-title {
-      font-family: 'Albert Sans', Arial, sans-serif;
-      font-weight: 200;
-      font-size: 28pt;
+
+    /* Prikaz IP adrese */
+    #ip-address {
       text-align: center;
-      color: var(--white);
-      margin-bottom: 12px;
-      margin-top: 0;
-      letter-spacing: 0.01em;
-    }
-    .ip-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
       margin-bottom: 10px;
     }
-    .ip-value {
-      font-family: 'Albert Sans', Arial, sans-serif;
-      font-weight: 900;
-      font-size: 62pt;
-      letter-spacing: 0.03em;
-      color: var(--green);
-      line-height: 1.06em;
-      background: none;
-      border: none;
-      outline: none;
-      user-select: all;
-      cursor: default;
-      padding: 0;
-    }
-    .ip-desc {
-      text-align: center;
-      color: var(--gray);
-      font-family: 'Albert Sans', Arial, sans-serif;
-      font-weight: 400;
-      font-size: 20pt;
-      margin-bottom: 30px;
-      margin-top: 2px;
-      line-height: 1.42em;
-    }
-    .reveal-zone {
-      margin-bottom: 40px;
-    }
-    .reveal-answers {
-      margin-bottom: 28px;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      width: 100%;
-      align-items: stretch;
-    }
-    .reveal-answer {
-      background: none;
-      color: var(--white);
-      font-family: 'Albert Sans', Arial, sans-serif;
-      font-weight: 200;
-      font-size: 20pt;
-      padding: 24px 28px 20px 28px;
-      border-radius: 17px;
-      box-sizing: border-box;
-      position: relative;
-      word-break: break-word;
-      border: none;
-      box-shadow: none;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .reveal-answer:not(:last-child)::after {
-      content: "";
-      display: block;
-      position: absolute;
-      bottom: -12px; left: 50%; transform: translateX(-50%);
-      width: 80%;
-      height: 3px;
-      background: var(--green);
-      border-radius: 5px;
-      opacity: 1;
-    }
-    .flag {
-      width: 29px; height: 21px;
-      border-radius: 3px;
-      margin-left: 16px;
-      margin-bottom: -3px;
-      object-fit: cover;
-      border: 1px solid #e6e6e6;
-      background: #fff;
-      vertical-align: middle;
-      display: inline-block;
-    }
-    .reveal-buttons {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 32px;
+    #ip-address p {
+      font-size: 0.9rem;
       margin-bottom: 4px;
-      margin-top: 8px;
-      flex-wrap: wrap;
     }
-    .reveal-btn {
-      font-family: 'Albert Sans', Arial, sans-serif;
+    #ip-address h1 {
+      font-size: 3rem;
       font-weight: 700;
-      font-size: 19pt;
-      color: var(--white);
-      background: var(--green);
-      border: none;
-      border-radius: 14px;
-      min-width: 146px;
-      min-height: 62px;
-      padding: 6px 18px;
-      margin-bottom: 0;
-      cursor: pointer;
-      box-shadow: 0 1.5px 7px rgba(132,198,119,0.10);
-      transition: background 0.13s, color 0.13s, filter 0.16s;
-      user-select: none;
-      outline: none;
-      letter-spacing: 0.01em;
-      white-space: normal;
-      word-break: break-word;
+      color: #84c677;
+      margin: 10px 0;
+    }
+
+    /* Mesto za tekst nakon klika na dugme */
+    #info-output {
       text-align: center;
+      font-size: 1rem;
+      color: #84c677;
+      min-height: 1.2em; /* osigurava da se container ne "slegne" kad je prazan */
+      margin: 20px 0;
+    }
+
+    /* Dugmad */
+    .button-container {
       display: flex;
-      align-items: center;
       justify-content: center;
+      gap: 15px;
+      margin-bottom: 30px;
     }
-    .reveal-btn:focus { outline: 2.5px solid var(--green-dark);}
-    .reveal-btn:active,
-    .reveal-btn.disabled,
-    .reveal-btn[disabled] {
-      background: var(--green-dark);
-      color: var(--white);
-      filter: brightness(0.93);
-      cursor: not-allowed;
-      pointer-events: none;
-      opacity: 0.9;
-    }
-    @media (max-width: 800px) {
-      .reveal-btn { min-width: 112px; font-size: 17pt; }
-    }
-    @media (max-width: 599px) {
-      .reveal-buttons {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 18px;
-      }
-      .reveal-btn {
-        min-width: 0;
-        width: 100%;
-        font-size: 17pt;
-        min-height: 56px;
-        padding: 8px 0;
-      }
-      .reveal-answer {
-        font-size: 18pt;
-        padding: 19px 10vw 15px 10vw;
-      }
-    }
-    .motivation {
-      margin: 55px 0 38px 0;
-      text-align: center;
-      color: var(--white);
-    }
-    .motivation h2 {
-      font-size: 20pt;
-      font-family: 'Albert Sans', Arial, sans-serif;
-      font-weight: 400;
-      margin: 0 0 12px 0;
-      color: var(--green);
-    }
-    .motivation strong {
-      font-family: 'Albert Sans', Arial, sans-serif;
-      font-weight: 800;
-      color: var(--green);
-      font-size: 20pt;
-    }
-    .motivation .sub {
-      color: var(--white);
-      font-size: 20pt;
-      font-family: 'Albert Sans', Arial, sans-serif;
-      font-weight: 400;
-    }
-    .motivation p {
-      font-size: 20pt;
-      margin: 0;
-      color: var(--white);
-      font-weight: 400;
-      line-height: 1.3em;
-    }
-    .faq-section {
-      background: var(--faq-bg);
-      border-left: 7px solid var(--faq-border);
-      border-radius: 16px;
-      margin: 64px 0 30px 0;
-      padding: 32px 30px 30px 30px;
-      color: var(--white);
-      font-size: 20pt;
-      font-family: 'Albert Sans', Arial, sans-serif;
-      font-weight: 400;
-      box-sizing: border-box;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.09);
-    }
-    .faq-section h2 {
-      color: var(--green);
-      font-size: 20pt;
-      font-family: 'Albert Sans', Arial, sans-serif;
-      font-weight: 800;
-      margin: 0 0 22px 0;
-    }
-    .faq-section ul,
-    .faq-section li {
-      color: var(--white);
-      font-size: 20pt;
-      font-family: 'Albert Sans', Arial, sans-serif;
-      font-weight: 400;
-      margin: 0;
-      padding: 0;
-      list-style-type: disc;
-      line-height: 1.55em;
-    }
-    .faq-section li { margin-bottom: 13px;}
-    .faq-section strong {
-      color: var(--green);
-      font-weight: 800;
-    }
-    .faq-section a { color: var(--green);}
-    .extra-section {
-      margin-top: 54px;
-      margin-bottom: 16px;
-      background: transparent;
-      border-radius: 13px;
-      padding: 0;
-      color: var(--white);
-      font-size: 20pt;
-      box-shadow: none;
-      border-left: none;
-    }
-    .extra-section h2 {
-      color: var(--green);
-      font-family: 'Albert Sans', Arial, sans-serif;
-      font-size: 20pt;
-      font-weight: 800;
-      margin-bottom: 12px;
-    }
-    .extra-section p, .extra-section a {
-      color: var(--white);
-      font-size: 20pt;
-      font-family: 'Albert Sans', Arial, sans-serif;
-      font-weight: 400;
-    }
-    .extra-section a { color: var(--green); text-decoration: underline;}
-    .footer {
-      text-align: center;
-      margin-top: 42px;
-      margin-bottom: 18px;
-      color: var(--gray);
-      font-size: 20pt;
-      font-family: 'Albert Sans', Arial, sans-serif;
-      font-weight: 400;
-    }
-    .footer .policy-links { margin-top: 12px; font-size: 20pt;}
-    .footer .policy-links a {
-      margin: 0 11px;
-      color: var(--green);
+    .btn {
+      background-color: #84c677;
+      color: #ffffff;
+      border: none;
+      border-radius: 25px;
+      padding: 12px 24px;
+      font-size: 0.9rem;
       font-weight: 700;
-      text-decoration: none;
+      text-transform: uppercase;
+      cursor: pointer;
+      flex: 1 0 auto;
+      max-width: 200px;
     }
-    .footer .policy-links a:hover { text-decoration: underline;}
-    @media (max-width: 599px) {
-      .footer, .footer .policy-links { font-size: 18pt;}
-      .faq-section, .extra-section, .faq-section ul, .faq-section li, .extra-section p { font-size: 18pt;}
-      .ad-header, .ad-middle, .ad-sticky { font-size: 16pt;}
+
+    /* Statični informativni tekst (pre sekcija About/FAQ/Contact) */
+    #info-text {
+      max-width: 800px;
+      margin: 0 auto 40px;
+    }
+    #info-text p {
+      text-align: center;
+      margin: 10px 0;
+    }
+    #info-text h3 {
+      color: #ffffff;
+      text-align: center;
+      margin: 20px 0 10px;
+    }
+    .highlight {
+      color: #84c677;
+      font-weight: 700;
+    }
+
+    /* Bottom sekcije: About, FAQ, Contact */
+    section.static-section {
+      max-width: 800px;
+      margin: 40px auto;
+      color: #ffffff;
+    }
+    section.static-section h2 {
+      margin-bottom: 10px;
+    }
+    section.static-section p {
+      margin-bottom: 10px;
+    }
+
+    /* Footer navigacija */
+    footer {
+      text-align: center;
+      margin: 40px 0 20px;
+    }
+    footer nav a {
+      color: #84c677;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: 700;
+    }
+
+    /* Mobile layout (2×2 dugmadi + padding sa strana) */
+    @media (max-width: 600px) {
+      .container {
+        padding: 0 0.5cm;
+      }
+      .button-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="ad-header" id="ad-header">[Ad space: header]</div>
-  <main>
-    <div class="mini-info" id="mini-info"></div>
-    <div class="main-title">Your IP Address is:</div>
-    <div class="ip-row">
-      <span class="ip-value" id="ip-address">...</span>
+  <div class="container">
+
+    <!-- HEADER: ovde ubaci svoj AdSense snippet -->
+    <header id="ad-header">
+      <!-- TODO: PASTE YOUR ADSENSE CODE HERE -->
+    </header>
+
+    <!-- Prikaz IP adrese i osnovnih informacija -->
+    <div id="ip-address">
+      <p>Your Browser is: <span id="browser-info"></span></p>
+      <p>Your IP type is: <span id="ip-type"></span></p>
+      <h1 id="ip-value">Loading...</h1>
+      <p>This is your public IP address shown for privacy and troubleshooting purposes.</p>
     </div>
-    <div class="ip-desc">This is your public IP address, shown for privacy and troubleshooting purposes.</div>
-    <div class="reveal-zone">
-      <div class="reveal-answers" id="reveal-answers"></div>
-      <div class="reveal-buttons">
-        <button class="reveal-btn" id="btn-location" disabled>Location</button>
-        <button class="reveal-btn" id="btn-isp" disabled>ISP</button>
-        <button class="reveal-btn" id="btn-asn" disabled>ASN</button>
-        <button class="reveal-btn" id="btn-tz" disabled>Timezone</button>
-      </div>
+
+    <!-- Tekst koji se pojavljuje nakon klika na dugme -->
+    <div id="info-output"></div>
+
+    <!-- Fiksna grupa dugmadi -->
+    <div class="button-container">
+      <button class="btn" data-action="location">Show Location</button>
+      <button class="btn" data-action="isp">Show ISP</button>
+      <button class="btn" data-action="asn">Show ASN</button>
+      <button class="btn" data-action="timezone">Show Timezone</button>
     </div>
-    <div class="ad-middle" id="ad-middle">[Ad space: middle]</div>
-    <section class="motivation" id="motivation">
-      <h2>Anyone can build. <span class="sub">With AI, everyone can create.</span></h2>
-      <p>
-        This project was built to test and showcase the real possibilities of modern AI-human collaboration.<br>
-        <strong>If you have ideas, curiosity, or ambition, don't let “I can't code” stop you.</strong><br><br>
-        With the right mindset, clear goals, and a bit of AI help, you can launch a real, working product — even if it's your very first attempt.<br><br>
-        <strong>Try, learn, build. What you imagine, you can now create.</strong>
-      </p>
+
+    <!-- Statični opisni tekst (pre detaljnih sekcija) -->
+    <div id="info-text">
+      <p>This project was built to test and showcase the real possibilities of modern AI-human collaboration.</p>
+      <p>If you have ideas, curiosity, or ambition, don't let “I can't code” stop you.</p>
+      <p>With the right mindset, clear goals, and a bit of AI help, you can launch a real, working product – even if it's your very first attempt.</p>
+      <p><strong>Try, learn, build. What you imagine, you can now create.</strong></p>
+
+      <h3>What is my IP and why does it matter?</h3>
+      <p><span class="highlight">IP address</span> identifies your device online. It lets websites, apps, and services know where to send and receive information.</p>
+      <p><span class="highlight">ISP</span> (Internet Service Provider) is the company that gives you internet access. Your IP is usually assigned by your ISP.</p>
+      <p><span class="highlight">ASN</span> (Autonomous System Number) is a unique identifier for networks that exchange internet traffic. Each ISP or large network has its ASN.</p>
+      <p><span class="highlight">IPv4</span> and <span class="highlight">IPv6</span> are two protocols for addressing devices. IPv4 is the older, most common format; IPv6 is newer and offers more addresses.</p>
+      <p>Your IP address and location are only approximate and cannot reveal your physical address.</p>
+    </div>
+
+    <!-- Sekcije za About, FAQ i Contact -->
+    <section id="about" class="static-section">
+      <h2>About</h2>
+      <p>[Insert your About content here]</p>
     </section>
-    <section class="faq-section" id="faq-section">
-      <h2>Frequently Asked Questions</h2>
-      <ul>
-        <li><strong>What is an IP address?</strong><br>
-          An IP address is a unique identifier for your device on the internet. It helps websites and services route information to you.</li>
-        <li><strong>Can my IP address reveal my location?</strong><br>
-          Your IP address can give a rough approximation of your city or country, but never your precise physical address.</li>
-        <li><strong>What is an ISP?</strong><br>
-          ISP stands for Internet Service Provider. It's the company that provides you with internet access and assigns your public IP.</li>
-        <li><strong>What is an ASN?</strong><br>
-          ASN stands for Autonomous System Number, a unique code for networks that exchange traffic on the internet.</li>
-        <li><strong>What are IPv4 and IPv6?</strong><br>
-          IPv4 and IPv6 are different versions of IP addressing. The original format is IPv4 (e.g. 192.168.0.1), while IPv6 is newer and longer (e.g. 2001:db8::1).</li>
-        <li><strong>How can I change my IP address?</strong><br>
-          Usually, you can change your public IP by restarting your router or connecting through a VPN.</li>
-        <li><strong>Is my data safe on this site?</strong><br>
-          Yes. We do not store or share any of your IP or browsing data. All info is shown only to you, in your browser.</li>
-      </ul>
+    <section id="faq" class="static-section">
+      <h2>FAQ</h2>
+      <p>[Insert your FAQ content here]</p>
     </section>
-    <section class="extra-section" id="about">
-      <h2>About this project</h2>
-      <p>
-        This website is the result of a unique collaboration between Dragan (designer, idea man, and relentless tester) and ChatGPT 4.1 (coding AI, never sleeps, always ships clean code).<br><br>
-        Conceived as a minimalist, lightning-fast IP info tool, it was designed entirely by Dragan — and coded line-by-line by ChatGPT 4.1, with no prior web development experience required from Dragan himself.<br><br>
-        Every feature, color, and idea is the result of a true “human + AI” workflow.<br><br>
-        We’re proud to present a site that proves: with good instructions and modern AI, anyone can build a professional product from scratch!
-      </p>
-    </section>
-    <section class="extra-section" id="privacy-policy">
-      <h2>Privacy Policy</h2>
-      <p>
-        <strong>Your privacy is our priority.</strong> This website does not store, share, or sell your IP address, location, or any other personal data.<br><br>
-        Data shown (such as IP address, city, ISP, etc.) is fetched in real time from third-party public APIs and displayed only in your browser session — we never collect, save, or analyze any of this information.<br><br>
-        We display Google Adsense ads for monetization. These ads are provided by Google and may use cookies or other tracking technologies as described in <a href=" https://policies.google.com/technologies/ads " target="_blank" rel="noopener noreferrer">Google's Privacy & Terms</a>.<br><br>
-        For questions about your data or privacy, feel free to contact us at the email below.
-      </p>
-    </section>
-    <section class="extra-section" id="contact">
+    <section id="contact" class="static-section">
       <h2>Contact</h2>
-      <p>
-        For feedback, bug reports, or collaboration requests, please email:<br>
-        <a href="mailto:youremail@example.com">youremail@example.com</a>
-      </p>
+      <p>[Insert your Contact information here]</p>
     </section>
-    <div class="footer">
-      &copy; 2025 Dragan & ChatGPT 4.1 Project | Simple IP Checker Tool
-      <div class="policy-links">
+
+    <!-- Footer linkovi za brzi scroll -->
+    <footer>
+      <nav>
         <a href="#about">About</a> |
-        <a href="#privacy-policy">Privacy Policy</a> |
+        <a href="#faq">FAQ</a> |
         <a href="#contact">Contact</a>
-      </div>
-    </div>
-  </main>
-  <div class="ad-sticky" id="ad-sticky" aria-label="Ad placeholder, sticky bottom">
-    [Ad space: sticky bottom]
+      </nav>
+    </footer>
   </div>
+
+  <!-- Konfiguracija i skripte -->
   <script>
-    window.onload = function() {
-      function detectMiniInfo(ipType) {
-        let ua = navigator.userAgent;
-        let browser = 'Browser';
-        let version = '';
-        if (ua.indexOf('Firefox') > -1) {
-          browser = 'Firefox';
-          version = ua.split('Firefox/')[1]?.split(' ')[0] || '';
-        } else if (ua.indexOf('Edg') > -1) {
-          browser = 'Edge';
-          version = ua.split('Edg/')[1]?.split(' ')[0] || '';
-        } else if (ua.indexOf('Chrome') > -1) {
-          browser = 'Chrome';
-          version = ua.split('Chrome/')[1]?.split(' ')[0] || '';
-        } else if (ua.indexOf('Safari') > -1) {
-          browser = 'Safari';
-          version = ua.split('Version/')[1]?.split(' ')[0] || '';
-        }
-        let out = `Browser: ${browser} ${version ? version : ""}`;
-        if (ipType) out += ` | IP type: ${ipType}`;
-        document.getElementById('mini-info').textContent = out;
+    // Konfigurisani API endpointi (možeš ih naknadno menjati)
+    const config = {
+      apiEndpoints: {
+        getIp:      'https://api.ipify.org?format=json',
+        getDetails: 'https://ipapi.co/json'
       }
-      let userData = {
-        ip: '...',
-        type: '',
-        country: '', region: '', city: '', flag: '',
-        isp: '', asn: '', asname: '', timezone: ''
-      };
-      function enableRevealButtons() {
-        document.querySelectorAll('.reveal-btn').forEach(btn => {
-          btn.disabled = false;
-          btn.classList.remove('disabled');
-        });
-      }
-      function fetchIPData() {
-        fetch('https://ipwho.is/ ')
-          .then(resp => resp.json())
-          .then(data => {
-            userData.ip = data.ip || '...';
-            userData.type = data.connection?.ip_version || (userData.ip.indexOf(':') > -1 ? 'IPv6' : 'IPv4');
-            userData.country = data.country_code || '';
-            userData.region = data.region || '';
-            userData.city = data.city || '';
-            userData.flag = data.flag?.img || (userData.country ? `https://flagcdn.com/24x18/ ${userData.country.toLowerCase()}.png` : '');
-            userData.isp = data.connection?.isp || '';
-            userData.asn = data.connection?.asn || '';
-            userData.asname = data.connection?.org || '';
-            userData.timezone = data.timezone?.id || '';
-            updateUI();
-            detectMiniInfo(userData.type);
-            enableRevealButtons();
-          })
-          .catch(() => {
-            fetch('https://ipinfo.io/json ')
-              .then(resp => resp.json())
-              .then(data => {
-                userData.ip = data.ip || '...';
-                userData.type = userData.ip.indexOf(':') > -1 ? 'IPv6' : 'IPv4';
-                userData.country = data.country || '';
-                userData.region = data.region || '';
-                userData.city = data.city || '';
-                userData.flag = data.country ? `https://flagcdn.com/24x18/ ${data.country.toLowerCase()}.png` : '';
-                userData.isp = data.org ? data.org : '';
-                userData.asn = (data.org||'').split(' ')[0] || '';
-                userData.asname = (data.org||'').split(' ').slice(1).join(' ') || '';
-                userData.timezone = data.timezone || '';
-                updateUI();
-                detectMiniInfo(userData.type);
-                enableRevealButtons();
-              });
-          });
-      }
-      function updateUI() {
-        document.getElementById('ip-address').textContent = userData.ip;
-      }
-      fetchIPData();
-      const answersZone = document.getElementById('reveal-answers');
-      const btnMap = [
-        { id: "btn-location",  label: "Location", getContent: () => {
-          let parts = [];
-          if (userData.city) parts.push(userData.city);
-          if (userData.region && userData.region !== userData.city) parts.push(userData.region);
-          if (userData.country) parts.push(userData.country);
-          let iso = userData.country;
-          let flag = userData.flag ? `<img class="flag" src="${userData.flag}" alt="${userData.country} flag">` : '';
-          let answer = parts.join(', ');
-          if (iso) answer += ` (${iso})`;
-          if (!answer) answer = "Location not available.";
-          answer += flag;
-          return answer;
-        }},
-        { id: "btn-isp", label: "ISP", getContent: () => {
-          let txt = userData.isp || userData.asname || '';
-          if (!txt) txt = "ISP information not available.";
-          return txt;
-        }},
-        { id: "btn-asn", label: "ASN", getContent: () => {
-          let txt = userData.asn ? `ASN: <strong>${userData.asn}</strong>` : '';
-          if (userData.asname) txt += txt ? ` (${userData.asname})` : userData.asname;
-          if (!txt) txt = "ASN not available.";
-          return txt;
-        }},
-        { id: "btn-tz", label: "Timezone", getContent: () => {
-          let time = '';
-          if (userData.timezone) {
-            let now = new Date().toLocaleString("en-US", {timeZone: userData.timezone, hour12: false});
-            time = `<br>Local time: <strong>${now}</strong>`;
-          }
-          let txt = userData.timezone ? `Timezone: <strong>${userData.timezone}</strong>${time}` : "Timezone not available.";
-          return txt;
-        }}
-      ];
-      let opened = [];
-      btnMap.forEach((b, i) => {
-        const btn = document.getElementById(b.id);
-        btn.onclick = function () {
-          // Samo proveravamo klasu 'disabled'
-          if (this.classList.contains('disabled')) return;
-
-          // Dodajemo klasu i postavljamo disabled da bi sprečili ponovno klikanje
-          this.classList.add('disabled');
-          this.disabled = true;
-
-          // Dodajemo indeks u listu otvorenih, ako već nije dodat
-          if (!opened.includes(i)) {
-            opened.push(i);
-          }
-
-          // Prikazujemo odgovarajući sadržaj
-          renderAnswers();
-        };
-      });
-
-      function renderAnswers() {
-        answersZone.innerHTML = '';
-        opened.forEach(idx => {
-          let html = `<div class="reveal-answer">${btnMap[idx].getContent()}</div>`;
-          answersZone.innerHTML += html;
-        });
-      }
-
-      document.querySelectorAll('.reveal-btn').forEach(btn=>{
-        btn.addEventListener('keydown',function(e){
-          if(e.key===' '||e.key==='Enter') this.click();
-        });
-      });
-      function fitButtons() {
-        document.querySelectorAll('.reveal-btn').forEach(btn=>{
-          btn.style.fontSize = "";
-          let parentW = btn.offsetWidth, fs = 19;
-          btn.style.whiteSpace = "nowrap";
-          while(btn.scrollWidth > parentW && fs > 11) {
-            fs -= 1;
-            btn.style.fontSize = fs + "px";
-          }
-        });
-      }
-      window.addEventListener('resize', fitButtons);
-      setTimeout(fitButtons, 600);
-      document.querySelectorAll('button, a').forEach(el=>{
-        el.addEventListener('keyup', e=>{
-          if(e.key==='Tab') el.style.outline = "2px solid var(--green)";
-        });
-        el.addEventListener('blur', e=>{
-          el.style.outline = "";
-        });
-      });
     };
+
+    // Pomoćna funkcija za GET JSON
+    async function fetchJson(url) {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('Network response was not ok');
+      return res.json();
+    }
+
+    // Inicijalizacija stranice
+    async function init() {
+      try {
+        // Dohvati IP
+        const { ip } = await fetchJson(config.apiEndpoints.getIp);
+        document.getElementById('ip-value').textContent = ip;
+
+        // Dohvati detalje (location, ISP, ASN, timezone)
+        const details = await fetchJson(`${config.apiEndpoints.getDetails}/${ip}/json/`);
+        // Prikaži browser i IP verziju
+        document.getElementById('browser-info').textContent = navigator.userAgent;
+        document.getElementById('ip-type').textContent = details.version || '';
+
+        // Sačuvaj podatke za dugmad
+        window.ipInfo = {
+          location: details.city + ', ' + details.region + ', ' + details.country_name + ' (' + details.country_code + ')',
+          isp:      details.org,
+          asn:      details.asn,
+          timezone: details.timezone + ' Local time: ' + new Date().toLocaleString()
+        };
+      } catch (err) {
+        console.error(err);
+        document.getElementById('info-output').textContent = 'Error loading IP information.';
+      }
+    }
+
+    // Rukovanje klikovima na dugmad
+    document.querySelector('.button-container').addEventListener('click', e => {
+      if (!e.target.classList.contains('btn')) return;
+      const action = e.target.getAttribute('data-action');
+      document.getElementById('info-output').textContent =
+        (window.ipInfo && window.ipInfo[action]) || 'No data available.';
+    });
+
+    window.addEventListener('DOMContentLoaded', init);
   </script>
+
+  <!-- TODO: Ovde ubaci Google Analytics ili Tag Manager snippet -->
 </body>
 </html>
