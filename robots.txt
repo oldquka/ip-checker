@@ -1,4 +1,0 @@
-User-agent: *
-Disallow:
-
-Sitemap: https://ip-checker-al1.pages.dev/sitemap.xml
