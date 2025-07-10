@@ -3,15 +3,107 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>IP Info</title>
+  <title>IP Info — Discover Your Public IP & Network Details</title>
+  <meta name="description" content="IP Info is a static single-page tool, built through AI–human collaboration, that instantly reveals your public IP address, geolocation, ISP, ASN and timezone. No coding required.">
 
-  <!-- Google Font: Albert Sans -->
+  <!-- Structured Data: WebSite -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "url": "https://yourdomain.com",
+    "name": "IP Info",
+    "description": "IP Info is a static single-page tool, built through AI–human collaboration, that instantly reveals your public IP address, geolocation, ISP, ASN and timezone. No coding required."
+  }
+  </script>
+
+  <!-- Structured Data: Organization & ContactPoint -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "IP Info",
+    "url": "https://yourdomain.com",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "email": "human.ai.design.studio@gmail.com",
+      "contactType": "customer support"
+    }
+  }
+  </script>
+
+  <!-- Structured Data: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is “My IP”?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Your IP address is a numerical label assigned by your ISP that identifies your device on the Internet."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How accurate is the location data?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We use industry-standard geolocation APIs—accuracy is generally city-level, not a precise street address."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do you store or share my IP?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. This is a purely client-side/static tool; we do not log, store, or transmit your IP beyond the API calls needed to display it."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why show me ASN and ISP?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "ASN (Autonomous System Number) identifies the network your ISP operates. This can help troubleshoot routing or performance issues."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I integrate this on my own site?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes—fork our code on GitHub under the MIT license and adapt it freely."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Preload & Preconnect / DNS-Prefetch -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;700&display=swap" as="style">
   <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  <link rel="preconnect" href="https://ipapi.co">
+  <link rel="dns-prefetch" href="https://ipapi.co">
 
+  <!-- Critical CSS -->
   <style>
     /* Reset & globals */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { width: 100%; height: 100%; }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+    }
     body {
       font-family: 'Albert Sans', sans-serif;
       background-color: #0a0e11;
@@ -22,30 +114,29 @@
       max-width: 1200px;
       width: 90%;
       margin: 0 auto;
-      padding: 20px 0; /* 20px top & bottom */
+      padding: 20px 0;
     }
 
-    /* HEADER – mesto za AdSense oglas */
+    /* AdSense header */
     header#ad-header {
-      width: 100%;
       text-align: center;
       margin-bottom: 20px;
     }
 
-    /* Prikaz IP adrese i tipa */
+    /* IP display */
     #ip-address {
       text-align: center;
       margin-bottom: 10px;
     }
     #ip-label,
     #ip-type-text {
-      font-size: 1.5rem;    /* 24px */
+      font-size: 1.5rem;
       font-weight: 700;
       color: #84c677;
       margin-bottom: 3px;
     }
     #ip-address h1 {
-      font-size: 3rem;      /* 48px */
+      font-size: 3rem;
       font-weight: 700;
       color: #84c677;
       margin: 0 0 6px 0;
@@ -53,21 +144,21 @@
     #ip-address p.description {
       font-size: 0.9rem;
       margin-bottom: 12px;
-      color: #ffffff;
     }
 
-    /* Dinamički tekst ispod IP: novi paragrafi */
+    /* Dynamic output */
     #info-output {
       text-align: center;
       font-size: 1rem;
       color: #84c677;
       margin: 20px 0;
+      min-height: 1.2em;
     }
     #info-output p {
-      margin-bottom: 8px;   /* mali razmak između tekstova */
+      margin-bottom: 8px;
     }
 
-    /* Dugmad */
+    /* Buttons */
     .button-container {
       display: flex;
       justify-content: center;
@@ -95,18 +186,16 @@
       cursor: default;
     }
 
-    /* Statični opisni tekst + explanatory block */
+    /* Explanatory block */
     #info-text {
       max-width: 800px;
       margin: 0 auto 40px;
+      text-align: center;
     }
     #info-text p {
-      text-align: center;
       margin: 10px 0;
     }
     #info-text h3 {
-      color: #ffffff;
-      text-align: center;
       margin: 20px 0 10px;
     }
     .highlight {
@@ -114,7 +203,7 @@
       font-weight: 700;
     }
 
-    /* Accordion styles for About, FAQ, Contact */
+    /* Accordion sections */
     .static-section {
       max-width: 800px;
       margin: 40px auto;
@@ -149,7 +238,7 @@
       display: block;
     }
 
-    /* Footer navigacija */
+    /* Footer nav */
     footer {
       text-align: center;
       margin: 40px 0 20px;
@@ -161,10 +250,10 @@
       font-weight: 700;
     }
 
-    /* Mobile layout */
+    /* Mobile */
     @media (max-width: 600px) {
       .container {
-        padding: 0.5cm 0.5cm 20px; /* top 0.5cm, sides 0.5cm, bottom 20px */
+        padding: 0.5cm 0.5cm 20px;
       }
       .button-container {
         display: grid;
@@ -177,12 +266,12 @@
 <body>
   <div class="container">
 
-    <!-- HEADER: ovde ubaci svoj AdSense snippet -->
+    <!-- AdSense header placeholder -->
     <header id="ad-header">
       <!-- TODO: PASTE YOUR ADSENSE CODE HERE -->
     </header>
 
-    <!-- Sekcija za prikaz IP adrese i tipa -->
+    <!-- IP display -->
     <div id="ip-address">
       <p id="ip-label">Your IP address is:</p>
       <h1 id="ip-value">Loading...</h1>
@@ -190,10 +279,10 @@
       <p class="description">This is your public IP address shown for privacy and troubleshooting purposes.</p>
     </div>
 
-    <!-- Dinamički paragrafi ispod IP (po kliku) -->
+    <!-- Dynamic info output -->
     <div id="info-output"></div>
 
-    <!-- Dugmad -->
+    <!-- Buttons -->
     <div class="button-container">
       <button class="btn" data-action="location">Show Location</button>
       <button class="btn" data-action="isp">Show ISP</button>
@@ -201,7 +290,7 @@
       <button class="btn" data-action="timezone">Show Timezone</button>
     </div>
 
-    <!-- Statični opisni tekst + explanatory block -->
+    <!-- Explanatory block -->
     <div id="info-text">
       <p>This project was built to test and showcase the real possibilities of modern AI-human collaboration.</p>
       <p>If you have ideas, curiosity, or ambition, don't let “I can't code” stop you.</p>
@@ -223,7 +312,7 @@
         <span class="accordion-toggle">&#9662;</span>
       </div>
       <div class="accordion-content">
-        <p>Welcome to <strong>IP Info</strong>, your one-stop static tool to instantly discover your public IP and related network details. Built through a lean AI-human workflow, our single-page site demonstrates that you don’t need to be a coder to launch a real, working product. Click the buttons to see your location, ISP, ASN, and timezone—no sign-up, no friction.</p>
+        <p>Welcome to <strong>IP Info</strong>, your one-stop static tool to instantly discover your public IP and related network details. Built through a lean AI-human workflow, our single-page site demonstrates that you don’t need to be a coder to launch a real, working product. Click the buttons to see your location, ISP, ASN, and timezone—no sign-up required.</p>
       </div>
     </section>
 
@@ -236,9 +325,9 @@
       <div class="accordion-content">
         <p><strong>Q1: What is “My IP”?</strong><br>A1: Your IP address is a numerical label assigned by your ISP that identifies your device on the Internet.</p>
         <p><strong>Q2: How accurate is the location data?</strong><br>A2: We use industry-standard geolocation APIs—accuracy is generally city-level, not a precise street address.</p>
-        <p><strong>Q3: Do you store or share my IP?</strong><br>A3: No. This is a purely client-side/static tool; we do not log, store, or transmit your IP beyond the API calls needed to display it.</p>
-        <p><strong>Q4: Why show me ASN and ISP?</strong><br>A4: ASN (Autonomous System Number) identifies the network your ISP operates. This can help troubleshoot routing or performance issues.</p>
-        <p><strong>Q5: Can I integrate this on my own site?</strong><br>A5: Yes—feel free to fork our code on GitHub and adapt it for your needs under the MIT license.</p>
+        <p><strong>Q3: Do you store or share my IP?</strong><br>A3: No. This is purely client-side; we do not log or store your IP beyond the API calls.</p>
+        <p><strong>Q4: Why show me ASN and ISP?</strong><br>A4: ASN identifies the network your ISP operates. This can help troubleshoot network issues.</p>
+        <p><strong>Q5: Can I integrate this on my own site?</strong><br>A5: Yes—fork our code on GitHub under the MIT license and adapt it freely.</p>
       </div>
     </section>
 
@@ -249,11 +338,11 @@
         <span class="accordion-toggle">&#9662;</span>
       </div>
       <div class="accordion-content">
-        <p>For inquiries and collaboration, reach out to us at <a href="mailto:human.ai.design.studio@gmail.com" style="color:#84c677; text-decoration:none;">human.ai.design.studio@gmail.com</a>.</p>
+        <p>For inquiries and collaboration, reach out via email: <a href="mailto:human.ai.design.studio@gmail.com" style="color:#84c677;text-decoration:none;">human.ai.design.studio@gmail.com</a>.</p>
       </div>
     </section>
 
-    <!-- Footer links -->
+    <!-- Footer navigation -->
     <footer>
       <nav>
         <a href="#about">About</a> |
@@ -261,9 +350,20 @@
         <a href="#contact">Contact</a>
       </nav>
     </footer>
+
   </div>
 
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
   <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+
+  <!-- Main JS logic -->
+  <script defer>
     const DETAILS_URL = 'https://ipapi.co/json/';
 
     async function fetchJson(url) {
@@ -278,15 +378,15 @@
         document.getElementById('ip-value').textContent = data.ip;
         document.getElementById('ip-type').textContent  = data.version || '';
         window.ipInfo = {
-          location:  data.city + ', ' + data.region + ', ' + data.country_name + ' (' + data.country_code + ')',
-          isp:       data.org,
-          asn:       data.asn,
-          timezone:  data.timezone + ' Local time: ' + new Date().toLocaleString()
+          location: data.city + ', ' + data.region + ', ' + data.country_name + ' (' + data.country_code + ')',
+          isp:      data.org,
+          asn:      data.asn,
+          timezone: data.timezone + ' Local time: ' + new Date().toLocaleString()
         };
       } catch (err) {
         console.error(err);
         const eo = document.getElementById('info-output');
-        const p = document.createElement('p');
+        const p  = document.createElement('p');
         p.textContent = 'Error loading IP information.';
         eo.appendChild(p);
       }
@@ -297,9 +397,9 @@
         .addEventListener('click', e => {
           if (!e.target.classList.contains('btn')) return;
           const action = e.target.getAttribute('data-action');
-          const text = window.ipInfo[action] || 'No data available.';
-          const eo = document.getElementById('info-output');
-          const p = document.createElement('p');
+          const text   = window.ipInfo[action] || 'No data available.';
+          const eo     = document.getElementById('info-output');
+          const p      = document.createElement('p');
           p.textContent = text;
           eo.appendChild(p);
           e.target.disabled = true;
@@ -325,7 +425,7 @@
           const targetId = link.getAttribute('href').substring(1);
           const section = document.getElementById(targetId);
           const content = section.querySelector('.accordion-content');
-          const toggle = section.querySelector('.accordion-toggle');
+          const toggle  = section.querySelector('.accordion-toggle');
           if (!content.classList.contains('open')) {
             content.classList.add('open');
             toggle.classList.add('open');
@@ -342,7 +442,5 @@
       setupNavLinks();
     });
   </script>
-
-  <!-- TODO: Ovde ubaci Google Analytics ili Tag Manager snippet -->
 </body>
 </html>
