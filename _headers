@@ -1,0 +1,11 @@
+# Eksterni CSS fajlovi – keširaj 1 godinu, immutable
+/css/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Eksterni JS fajlovi – keširaj 1 godinu, immutable
+/js/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Glavna stranica (index.html i svi root zahtevi) – keširaj 2 sata
+/*
+  Cache-Control: public, max-age=7200
