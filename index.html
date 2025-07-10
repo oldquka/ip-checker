@@ -22,17 +22,17 @@
       max-width: 1200px;
       width: 90%;
       margin: 0 auto;
-      padding: 20px 0;
+      padding: 20px 0; /* 20px top & bottom */
     }
 
-    /* Header (AdSense placeholder) */
+    /* HEADER – mesto za AdSense oglas */
     header#ad-header {
       width: 100%;
       text-align: center;
       margin-bottom: 20px;
     }
 
-    /* IP display & type */
+    /* Prikaz IP adrese i tipa */
     #ip-address {
       text-align: center;
       margin-bottom: 10px;
@@ -86,6 +86,10 @@
       flex: 1 0 auto;
       max-width: 200px;
       transition: opacity 0.2s;
+
+      /* uklanjanje plavog tap-highlight-a na mobilnim uređajima */
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
     }
     .btn:disabled {
       opacity: 0.5;
@@ -111,7 +115,7 @@
       font-weight: 700;
     }
 
-    /* About/FAQ/Contact sections */
+    /* Sekcije About, FAQ, Contact */
     section.static-section {
       max-width: 800px;
       margin: 40px auto;
@@ -124,7 +128,7 @@
       margin-bottom: 10px;
     }
 
-    /* Footer nav */
+    /* Footer navigacija */
     footer {
       text-align: center;
       margin: 40px 0 20px;
@@ -255,7 +259,6 @@
           const p = document.createElement('p');
           p.textContent = text;
           eo.appendChild(p);
-          // disable and grey out this button
           e.target.disabled = true;
         });
     }
