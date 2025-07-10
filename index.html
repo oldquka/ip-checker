@@ -25,14 +25,14 @@
       padding: 20px 0; /* 20px top & bottom */
     }
 
-    /* HEADER – AdSense placeholder */
+    /* HEADER – mesto za AdSense oglas */
     header#ad-header {
       width: 100%;
       text-align: center;
       margin-bottom: 20px;
     }
 
-    /* IP display & type */
+    /* Prikaz IP adrese i tipa */
     #ip-address {
       text-align: center;
       margin-bottom: 10px;
@@ -55,7 +55,7 @@
       color: #ffffff;
     }
 
-    /* Dynamic info output */
+    /* Dinamički tekst ispod IP: novi paragrafi */
     #info-output {
       text-align: center;
       font-size: 1rem;
@@ -63,10 +63,10 @@
       margin: 20px 0;
     }
     #info-output p {
-      margin-bottom: 8px;
+      margin-bottom: 8px;   /* mali razmak između tekstova */
     }
 
-    /* Buttons */
+    /* Dugmad */
     .button-container {
       display: flex;
       justify-content: center;
@@ -94,7 +94,7 @@
       cursor: default;
     }
 
-    /* Static descriptive text */
+    /* Statični opisni tekst + explanatory block */
     #info-text {
       max-width: 800px;
       margin: 0 auto 40px;
@@ -124,6 +124,7 @@
       align-items: center;
       cursor: pointer;
       user-select: none;
+      padding: 10px 0;
     }
     .accordion-header h2 {
       flex: 1;
@@ -141,12 +142,13 @@
     .accordion-content {
       display: none;
       margin-top: 10px;
+      line-height: 1.5;
     }
     .accordion-content.open {
       display: block;
     }
 
-    /* Footer nav */
+    /* Footer navigacija */
     footer {
       text-align: center;
       margin: 40px 0 20px;
@@ -174,22 +176,22 @@
 <body>
   <div class="container">
 
-    <!-- HEADER: AdSense placeholder -->
+    <!-- HEADER: ovde ubaci svoj AdSense snippet -->
     <header id="ad-header">
       <!-- TODO: PASTE YOUR ADSENSE CODE HERE -->
     </header>
 
-    <!-- IP display -->
+    <!-- Sekcija za prikaz IP adrese i tipa -->
     <div id="ip-address">
       <p id="ip-type-text">Your IP type is: <span id="ip-type">Loading...</span></p>
       <h1 id="ip-value">Loading...</h1>
       <p class="description">This is your public IP address shown for privacy and troubleshooting purposes.</p>
     </div>
 
-    <!-- Dynamic info output -->
+    <!-- Dinamički paragrafi ispod IP (po kliku) -->
     <div id="info-output"></div>
 
-    <!-- Buttons -->
+    <!-- Dugmad -->
     <div class="button-container">
       <button class="btn" data-action="location">Show Location</button>
       <button class="btn" data-action="isp">Show ISP</button>
@@ -197,12 +199,19 @@
       <button class="btn" data-action="timezone">Show Timezone</button>
     </div>
 
-    <!-- Static descriptive text -->
+    <!-- Statični opisni tekst + explanatory block -->
     <div id="info-text">
       <p>This project was built to test and showcase the real possibilities of modern AI-human collaboration.</p>
       <p>If you have ideas, curiosity, or ambition, don't let “I can't code” stop you.</p>
-      <p>With the right mindset, clear goals, and a bit of AI help, you can launch a real, working product – even if it's your very first attempt.</p>
+      <p>With the right mindset, clear goals, and a bit of AI help, you can launch a real, working product—even if it's your very first attempt.</p>
       <p><strong>Try, learn, build. What you imagine, you can now create.</strong></p>
+
+      <h3>What is my IP and why does it matter?</h3>
+      <p><span class="highlight">IP address</span> identifies your device online. It lets websites, apps, and services know where to send and receive information.</p>
+      <p><span class="highlight">ISP</span> (Internet Service Provider) is the company that gives you internet access. Your IP is usually assigned by your ISP.</p>
+      <p><span class="highlight">ASN</span> (Autonomous System Number) is a unique identifier for networks that exchange internet traffic. Each ISP or large network has its ASN.</p>
+      <p><span class="highlight">IPv4</span> and <span class="highlight">IPv6</span> are two protocols for addressing devices. IPv4 is the older, most common format; IPv6 is newer and offers more addresses.</p>
+      <p>Your IP address and location are only approximate and cannot reveal your physical address.</p>
     </div>
 
     <!-- Accordion: About -->
@@ -252,7 +261,7 @@
     </footer>
   </div>
 
-  <!-- Scripts -->
+  <!-- Skripta za dohvat podataka i rukovanje klikovima i accordionima -->
   <script>
     const DETAILS_URL = 'https://ipapi.co/json/';
 
