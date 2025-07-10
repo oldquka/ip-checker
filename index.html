@@ -53,7 +53,7 @@
       text-align: center;
       font-size: 1rem;
       color: #84c677;
-      min-height: 1.2em; /* osigurava da se container ne "slegne" kad je prazan */
+      min-height: 1.2em;
       margin: 20px 0;
     }
 
@@ -78,7 +78,7 @@
       max-width: 200px;
     }
 
-    /* Statični informativni tekst (pre sekcija About/FAQ/Contact) */
+    /* Statični informativni tekst */
     #info-text {
       max-width: 800px;
       margin: 0 auto 40px;
@@ -145,8 +145,8 @@
 
     <!-- Prikaz IP adrese i osnovnih informacija -->
     <div id="ip-address">
-      <p>Your Browser is: <span id="browser-info"></span></p>
-      <p>Your IP type is: <span id="ip-type"></span></p>
+      <p>Your Browser is: <span id="browser-info">Loading...</span></p>
+      <p>Your IP type is: <span id="ip-type">Loading...</span></p>
       <h1 id="ip-value">Loading...</h1>
       <p>This is your public IP address shown for privacy and troubleshooting purposes.</p>
     </div>
@@ -162,7 +162,7 @@
       <button class="btn" data-action="timezone">Show Timezone</button>
     </div>
 
-    <!-- Statični opisni tekst (pre detaljnih sekcija) -->
+    <!-- Statični opisni tekst -->
     <div id="info-text">
       <p>This project was built to test and showcase the real possibilities of modern AI-human collaboration.</p>
       <p>If you have ideas, curiosity, or ambition, don't let “I can't code” stop you.</p>
@@ -201,42 +201,31 @@
     </footer>
   </div>
 
-  <!-- Konfiguracija i skripte -->
+  <!-- Skripta za dohvat podataka i rukovanje klikovima -->
   <script>
-    // Konfigurisani API endpointi (možeš ih naknadno menjati)
-    const config = {
-      apiEndpoints: {
-        getIp:      'https://api.ipify.org?format=json',
-        getDetails: 'https://ipapi.co/json'
-      }
-    };
+    // URL za ip-api.com: vraća { query, country, countryCode, regionName, city, isp, as, timezone, ... }
+    const DETAILS_URL = 'http://ip-api.com/json';
 
-    // Pomoćna funkcija za GET JSON
     async function fetchJson(url) {
       const res = await fetch(url);
-      if (!res.ok) throw new Error('Network response was not ok');
+      if (!res.ok) throw new Error('Network problem');
       return res.json();
     }
 
-    // Inicijalizacija stranice
     async function init() {
       try {
-        // Dohvati IP
-        const { ip } = await fetchJson(config.apiEndpoints.getIp);
-        document.getElementById('ip-value').textContent = ip;
+        const data = await fetchJson(DETAILS_URL);
+        // IP i osnovni detalji
+        document.getElementById('ip-value').textContent      = data.query;
+        document.getElementById('browser-info').textContent  = navigator.userAgent;
+        document.getElementById('ip-type').textContent       = data.query.includes(':') ? 'IPv6' : 'IPv4';
 
-        // Dohvati detalje (location, ISP, ASN, timezone)
-        const details = await fetchJson(`${config.apiEndpoints.getDetails}/${ip}/json/`);
-        // Prikaži browser i IP verziju
-        document.getElementById('browser-info').textContent = navigator.userAgent;
-        document.getElementById('ip-type').textContent = details.version || '';
-
-        // Sačuvaj podatke za dugmad
+        // Pripremi objekt za dugmad
         window.ipInfo = {
-          location: details.city + ', ' + details.region + ', ' + details.country_name + ' (' + details.country_code + ')',
-          isp:      details.org,
-          asn:      details.asn,
-          timezone: details.timezone + ' Local time: ' + new Date().toLocaleString()
+          location: data.city + ', ' + data.regionName + ', ' + data.country + ' (' + data.countryCode + ')',
+          isp:      data.isp,
+          asn:      data.as,
+          timezone: data.timezone + ' Local time: ' + new Date().toLocaleString()
         };
       } catch (err) {
         console.error(err);
@@ -244,15 +233,20 @@
       }
     }
 
-    // Rukovanje klikovima na dugmad
-    document.querySelector('.button-container').addEventListener('click', e => {
-      if (!e.target.classList.contains('btn')) return;
-      const action = e.target.getAttribute('data-action');
-      document.getElementById('info-output').textContent =
-        (window.ipInfo && window.ipInfo[action]) || 'No data available.';
-    });
+    function setupButtons() {
+      document.querySelector('.button-container')
+        .addEventListener('click', e => {
+          if (!e.target.classList.contains('btn')) return;
+          const action = e.target.getAttribute('data-action');
+          document.getElementById('info-output').textContent =
+            window.ipInfo[action] || 'No data available.';
+        });
+    }
 
-    window.addEventListener('DOMContentLoaded', init);
+    window.addEventListener('DOMContentLoaded', () => {
+      init();
+      setupButtons();
+    });
   </script>
 
   <!-- TODO: Ovde ubaci Google Analytics ili Tag Manager snippet -->
