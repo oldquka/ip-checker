@@ -22,32 +22,32 @@
       max-width: 1200px;
       width: 90%;
       margin: 0 auto;
-      padding: 20px 0;
+      padding: 20px 0; /* 20px top & bottom */
     }
 
-    /* Header (AdSense placeholder) */
+    /* HEADER – mesto za AdSense oglas */
     header#ad-header {
       width: 100%;
       text-align: center;
       margin-bottom: 20px;
     }
 
-    /* IP display & type */
+    /* Prikaz IP adrese i tipa */
     #ip-address {
       text-align: center;
       margin-bottom: 10px;
     }
     #ip-type-text {
-      font-size: 1.5rem;    /* 24px, između 1rem i 2rem */
+      font-size: 1.5rem;    /* 24px */
       font-weight: 700;
       color: #84c677;
-      margin-bottom: 3px;   /* pola puta između 2px i 4px */
+      margin-bottom: 3px;
     }
     #ip-address h1 {
       font-size: 3rem;      /* 48px */
       font-weight: 700;
       color: #84c677;
-      margin: 0 0 6px 0;    /* pola puta između 4px i 8px */
+      margin: 0 0 6px 0;
     }
     #ip-address p.description {
       font-size: 0.9rem;
@@ -55,7 +55,7 @@
       color: #ffffff;
     }
 
-    /* Dynamic info output */
+    /* Dinamički tekst ispod IP */
     #info-output {
       text-align: center;
       font-size: 1rem;
@@ -64,7 +64,7 @@
       margin: 20px 0;
     }
 
-    /* Button styles */
+    /* Dugmad */
     .button-container {
       display: flex;
       justify-content: center;
@@ -85,7 +85,7 @@
       max-width: 200px;
     }
 
-    /* Static descriptive text */
+    /* Statični opisni tekst */
     #info-text {
       max-width: 800px;
       margin: 0 auto 40px;
@@ -104,7 +104,7 @@
       font-weight: 700;
     }
 
-    /* About/FAQ/Contact sections */
+    /* Sekcije About, FAQ, Contact */
     section.static-section {
       max-width: 800px;
       margin: 40px auto;
@@ -117,7 +117,7 @@
       margin-bottom: 10px;
     }
 
-    /* Footer nav */
+    /* Footer navigacija */
     footer {
       text-align: center;
       margin: 40px 0 20px;
@@ -129,10 +129,10 @@
       font-weight: 700;
     }
 
-    /* Mobile layout: 2×2 buttons + 0.5cm side padding */
+    /* Mobilni raspored: 2×2 dugmadi + 0.5cm top/side padding, bottom ostaje 20px */
     @media (max-width: 600px) {
       .container {
-        padding: 0 0.5cm;
+        padding: 0.5cm 0.5cm 20px; /* top 0.5cm, sides 0.5cm, bottom 20px */
       }
       .button-container {
         display: grid;
@@ -150,17 +150,17 @@
       <!-- TODO: PASTE YOUR ADSENSE CODE HERE -->
     </header>
 
-    <!-- IP display -->
+    <!-- Sekcija za prikaz IP adrese i tipa -->
     <div id="ip-address">
       <p id="ip-type-text">Your IP type is: <span id="ip-type">Loading...</span></p>
       <h1 id="ip-value">Loading...</h1>
       <p class="description">This is your public IP address shown for privacy and troubleshooting purposes.</p>
     </div>
 
-    <!-- Dynamic info output -->
+    <!-- Dinamički odgovor dugmadi -->
     <div id="info-output"></div>
 
-    <!-- Buttons -->
+    <!-- Dugmad -->
     <div class="button-container">
       <button class="btn" data-action="location">Show Location</button>
       <button class="btn" data-action="isp">Show ISP</button>
@@ -168,7 +168,7 @@
       <button class="btn" data-action="timezone">Show Timezone</button>
     </div>
 
-    <!-- Static descriptive text -->
+    <!-- Statični opisni tekst -->
     <div id="info-text">
       <p>This project was built to test and showcase the real possibilities of modern AI-human collaboration.</p>
       <p>If you have ideas, curiosity, or ambition, don't let “I can't code” stop you.</p>
@@ -207,7 +207,7 @@
     </footer>
   </div>
 
-  <!-- Data fetch & button logic -->
+  <!-- Skripta za dohvat podataka i rukovanje klikovima -->
   <script>
     const DETAILS_URL = 'https://ipapi.co/json/';
 
