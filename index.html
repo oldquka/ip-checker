@@ -25,7 +25,7 @@
       padding: 20px 0;
     }
 
-    /* HEADER – ovde ide AdSense kod */
+    /* HEADER – mesto za AdSense oglas */
     header#ad-header {
       width: 100%;
       text-align: center;
@@ -48,7 +48,7 @@
       margin: 10px 0;
     }
 
-    /* Mesto za tekst nakon klika na dugme */
+    /* Tekst nakon klika na dugme */
     #info-output {
       text-align: center;
       font-size: 1rem;
@@ -57,7 +57,7 @@
       margin: 20px 0;
     }
 
-    /* Dugmad */
+    /* Stil dugmadi */
     .button-container {
       display: flex;
       justify-content: center;
@@ -78,7 +78,7 @@
       max-width: 200px;
     }
 
-    /* Statični informativni tekst */
+    /* Statični opisni tekst */
     #info-text {
       max-width: 800px;
       margin: 0 auto 40px;
@@ -97,7 +97,7 @@
       font-weight: 700;
     }
 
-    /* Bottom sekcije: About, FAQ, Contact */
+    /* Sekcije About, FAQ, Contact */
     section.static-section {
       max-width: 800px;
       margin: 40px auto;
@@ -122,7 +122,7 @@
       font-weight: 700;
     }
 
-    /* Mobile layout (2×2 dugmadi + padding sa strana) */
+    /* Mobilni raspored (2×2 dugmadi + padding 0.5cm sa strana) */
     @media (max-width: 600px) {
       .container {
         padding: 0 0.5cm;
@@ -143,7 +143,7 @@
       <!-- TODO: PASTE YOUR ADSENSE CODE HERE -->
     </header>
 
-    <!-- Prikaz IP adrese i osnovnih informacija -->
+    <!-- Sekcija za prikaz IP adrese i osnovnih informacija -->
     <div id="ip-address">
       <p>Your Browser is: <span id="browser-info">Loading...</span></p>
       <p>Your IP type is: <span id="ip-type">Loading...</span></p>
@@ -151,7 +151,7 @@
       <p>This is your public IP address shown for privacy and troubleshooting purposes.</p>
     </div>
 
-    <!-- Tekst koji se pojavljuje nakon klika na dugme -->
+    <!-- Mesto za dinamički tekst pri kliku na dugme -->
     <div id="info-output"></div>
 
     <!-- Fiksna grupa dugmadi -->
@@ -203,8 +203,8 @@
 
   <!-- Skripta za dohvat podataka i rukovanje klikovima -->
   <script>
-    // URL za ip-api.com: vraća { query, country, countryCode, regionName, city, isp, as, timezone, ... }
-    const DETAILS_URL = 'http://ip-api.com/json';
+    // HTTPS endpoint bez ključa za kompletnu geolokaciju i ASN/ISP
+    const DETAILS_URL = 'https://ipapi.co/json/';
 
     async function fetchJson(url) {
       const res = await fetch(url);
@@ -215,16 +215,17 @@
     async function init() {
       try {
         const data = await fetchJson(DETAILS_URL);
-        // IP i osnovni detalji
-        document.getElementById('ip-value').textContent      = data.query;
-        document.getElementById('browser-info').textContent  = navigator.userAgent;
-        document.getElementById('ip-type').textContent       = data.query.includes(':') ? 'IPv6' : 'IPv4';
 
-        // Pripremi objekt za dugmad
+        // Popuni osnovne podatke
+        document.getElementById('ip-value').textContent     = data.ip;
+        document.getElementById('browser-info').textContent = navigator.userAgent;
+        document.getElementById('ip-type').textContent      = data.version || '';
+
+        // Sačuvaj podatke za dugmad
         window.ipInfo = {
-          location: data.city + ', ' + data.regionName + ', ' + data.country + ' (' + data.countryCode + ')',
-          isp:      data.isp,
-          asn:      data.as,
+          location: data.city + ', ' + data.region + ', ' + data.country_name + ' (' + data.country_code + ')',
+          isp:      data.org,
+          asn:      data.org.split(' ')[0],  // uzimamo npr. "AS31042"
           timezone: data.timezone + ' Local time: ' + new Date().toLocaleString()
         };
       } catch (err) {
@@ -250,5 +251,6 @@
   </script>
 
   <!-- TODO: Ovde ubaci Google Analytics ili Tag Manager snippet -->
+
 </body>
 </html>
