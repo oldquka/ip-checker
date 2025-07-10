@@ -25,14 +25,14 @@
       padding: 20px 0; /* 20px top & bottom */
     }
 
-    /* HEADER – mesto za AdSense oglas */
+    /* HEADER – AdSense placeholder */
     header#ad-header {
       width: 100%;
       text-align: center;
       margin-bottom: 20px;
     }
 
-    /* Prikaz IP adrese i tipa */
+    /* IP display & type */
     #ip-address {
       text-align: center;
       margin-bottom: 10px;
@@ -55,7 +55,7 @@
       color: #ffffff;
     }
 
-    /* Dinamički tekst ispod IP: novi paragrafi */
+    /* Dynamic info output */
     #info-output {
       text-align: center;
       font-size: 1rem;
@@ -63,10 +63,10 @@
       margin: 20px 0;
     }
     #info-output p {
-      margin-bottom: 8px;   /* mali razmak između tekstova */
+      margin-bottom: 8px;
     }
 
-    /* Dugmad */
+    /* Buttons */
     .button-container {
       display: flex;
       justify-content: center;
@@ -86,8 +86,6 @@
       flex: 1 0 auto;
       max-width: 200px;
       transition: opacity 0.2s;
-
-      /* uklanjanje plavog tap-highlight-a na mobilnim uređajima */
       -webkit-tap-highlight-color: transparent;
       outline: none;
     }
@@ -96,7 +94,7 @@
       cursor: default;
     }
 
-    /* Statični opisni tekst */
+    /* Static descriptive text */
     #info-text {
       max-width: 800px;
       margin: 0 auto 40px;
@@ -115,20 +113,40 @@
       font-weight: 700;
     }
 
-    /* Sekcije About, FAQ, Contact */
-    section.static-section {
+    /* Accordion styles for About, FAQ, Contact */
+    .static-section {
       max-width: 800px;
       margin: 40px auto;
       color: #ffffff;
     }
-    section.static-section h2 {
-      margin-bottom: 10px;
+    .accordion-header {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
     }
-    section.static-section p {
-      margin-bottom: 10px;
+    .accordion-header h2 {
+      flex: 1;
+      font-size: 1.5rem;
+      color: #ffffff;
+    }
+    .accordion-toggle {
+      font-size: 1.2rem;
+      color: #84c677;
+      transition: transform 0.2s;
+    }
+    .accordion-toggle.open {
+      transform: rotate(180deg);
+    }
+    .accordion-content {
+      display: none;
+      margin-top: 10px;
+    }
+    .accordion-content.open {
+      display: block;
     }
 
-    /* Footer navigacija */
+    /* Footer nav */
     footer {
       text-align: center;
       margin: 40px 0 20px;
@@ -140,7 +158,7 @@
       font-weight: 700;
     }
 
-    /* Mobilni raspored: 2×2 dugmadi + 0.5cm top/side padding, bottom ostaje 20px */
+    /* Mobile layout */
     @media (max-width: 600px) {
       .container {
         padding: 0.5cm 0.5cm 20px; /* top 0.5cm, sides 0.5cm, bottom 20px */
@@ -156,22 +174,22 @@
 <body>
   <div class="container">
 
-    <!-- HEADER: ovde ubaci svoj AdSense snippet -->
+    <!-- HEADER: AdSense placeholder -->
     <header id="ad-header">
       <!-- TODO: PASTE YOUR ADSENSE CODE HERE -->
     </header>
 
-    <!-- Sekcija za prikaz IP adrese i tipa -->
+    <!-- IP display -->
     <div id="ip-address">
       <p id="ip-type-text">Your IP type is: <span id="ip-type">Loading...</span></p>
       <h1 id="ip-value">Loading...</h1>
       <p class="description">This is your public IP address shown for privacy and troubleshooting purposes.</p>
     </div>
 
-    <!-- Dinamički paragrafi ispod IP (po kliku) -->
+    <!-- Dynamic info output -->
     <div id="info-output"></div>
 
-    <!-- Dugmad -->
+    <!-- Buttons -->
     <div class="button-container">
       <button class="btn" data-action="location">Show Location</button>
       <button class="btn" data-action="isp">Show ISP</button>
@@ -179,37 +197,49 @@
       <button class="btn" data-action="timezone">Show Timezone</button>
     </div>
 
-    <!-- Statični opisni tekst -->
+    <!-- Static descriptive text -->
     <div id="info-text">
       <p>This project was built to test and showcase the real possibilities of modern AI-human collaboration.</p>
       <p>If you have ideas, curiosity, or ambition, don't let “I can't code” stop you.</p>
       <p>With the right mindset, clear goals, and a bit of AI help, you can launch a real, working product – even if it's your very first attempt.</p>
       <p><strong>Try, learn, build. What you imagine, you can now create.</strong></p>
-
-      <h3>What is my IP and why does it matter?</h3>
-      <p><span class="highlight">IP address</span> identifies your device online. It lets websites, apps, and services know where to send and receive information.</p>
-      <p><span class="highlight">ISP</span> (Internet Service Provider) is the company that gives you internet access. Your IP is usually assigned by your ISP.</p>
-      <p><span class="highlight">ASN</span> (Autonomous System Number) is a unique identifier for networks that exchange internet traffic. Each ISP or large network has its ASN.</p>
-      <p><span class="highlight">IPv4</span> and <span class="highlight">IPv6</span> are two protocols for addressing devices. IPv4 is the older, most common format; IPv6 is newer and offers more addresses.</p>
-      <p>Your IP address and location are only approximate and cannot reveal your physical address.</p>
     </div>
 
-    <!-- Sekcije za About, FAQ i Contact -->
+    <!-- Accordion: About -->
     <section id="about" class="static-section">
-      <h2>About</h2>
-      <p>Welcome to <strong>IP Info</strong>, your one-stop static tool to instantly discover your public IP and related network details. Built through a lean AI-human workflow, our single-page site demonstrates that you don’t need to be a coder to launch a real, working product. Click the buttons to see your location, ISP, ASN, and timezone—no sign-up, no friction.</p>
+      <div class="accordion-header">
+        <h2>About</h2>
+        <span class="accordion-toggle">&#9662;</span>
+      </div>
+      <div class="accordion-content">
+        <p>Welcome to <strong>IP Info</strong>, your one-stop static tool to instantly discover your public IP and related network details. Built through a lean AI-human workflow, our single-page site demonstrates that you don’t need to be a coder to launch a real, working product. Click the buttons to see your location, ISP, ASN, and timezone—no sign-up, no friction.</p>
+      </div>
     </section>
+
+    <!-- Accordion: FAQ -->
     <section id="faq" class="static-section">
-      <h2>FAQ</h2>
-      <p><strong>Q1: What is “My IP”?</strong><br>A1: Your IP address is a numerical label assigned by your ISP that identifies your device on the Internet.</p>
-      <p><strong>Q2: How accurate is the location data?</strong><br>A2: We use industry-standard geolocation APIs—accuracy is generally city-level, not a precise street address.</p>
-      <p><strong>Q3: Do you store or share my IP?</strong><br>A3: No. This is a purely client-side/static tool; we do not log, store, or transmit your IP beyond the API calls needed to display it.</p>
-      <p><strong>Q4: Why show me ASN and ISP?</strong><br>A4: ASN (Autonomous System Number) identifies the network your ISP operates. This can help troubleshoot routing or performance issues.</p>
-      <p><strong>Q5: Can I integrate this on my own site?</strong><br>A5: Yes—feel free to fork our code on GitHub and adapt it for your needs under the MIT license.</p>
+      <div class="accordion-header">
+        <h2>FAQ</h2>
+        <span class="accordion-toggle">&#9662;</span>
+      </div>
+      <div class="accordion-content">
+        <p><strong>Q1: What is “My IP”?</strong><br>A1: Your IP address is a numerical label assigned by your ISP that identifies your device on the Internet.</p>
+        <p><strong>Q2: How accurate is the location data?</strong><br>A2: We use industry-standard geolocation APIs—accuracy is generally city-level, not a precise street address.</p>
+        <p><strong>Q3: Do you store or share my IP?</strong><br>A3: No. This is a purely client-side/static tool; we do not log, store, or transmit your IP beyond the API calls needed to display it.</p>
+        <p><strong>Q4: Why show me ASN and ISP?</strong><br>A4: ASN (Autonomous System Number) identifies the network your ISP operates. This can help troubleshoot routing or performance issues.</p>
+        <p><strong>Q5: Can I integrate this on my own site?</strong><br>A5: Yes—feel free to fork our code on GitHub and adapt it for your needs under the MIT license.</p>
+      </div>
     </section>
+
+    <!-- Accordion: Contact -->
     <section id="contact" class="static-section">
-      <h2>Contact</h2>
-      <p>For inquiries and collaboration, reach out to us at <a href="mailto:human.ai.design.studio@gmail.com" style="color:#84c677; text-decoration:none;">human.ai.design.studio@gmail.com</a>.</p>
+      <div class="accordion-header">
+        <h2>Contact</h2>
+        <span class="accordion-toggle">&#9662;</span>
+      </div>
+      <div class="accordion-content">
+        <p>For inquiries and collaboration, reach out to us at <a href="mailto:human.ai.design.studio@gmail.com" style="color:#84c677; text-decoration:none;">human.ai.design.studio@gmail.com</a>.</p>
+      </div>
     </section>
 
     <!-- Footer links -->
@@ -222,7 +252,7 @@
     </footer>
   </div>
 
-  <!-- Skripta za dohvat podataka i rukovanje klikovima -->
+  <!-- Scripts -->
   <script>
     const DETAILS_URL = 'https://ipapi.co/json/';
 
@@ -237,12 +267,11 @@
         const data = await fetchJson(DETAILS_URL);
         document.getElementById('ip-value').textContent = data.ip;
         document.getElementById('ip-type').textContent  = data.version || '';
-
         window.ipInfo = {
-          location: data.city + ', ' + data.region + ', ' + data.country_name + ' (' + data.country_code + ')',
-          isp:      data.org,
-          asn:      data.asn,
-          timezone: data.timezone + ' Local time: ' + new Date().toLocaleString()
+          location:  data.city + ', ' + data.region + ', ' + data.country_name + ' (' + data.country_code + ')',
+          isp:       data.org,
+          asn:       data.asn,
+          timezone:  data.timezone + ' Local time: ' + new Date().toLocaleString()
         };
       } catch (err) {
         console.error(err);
@@ -267,9 +296,40 @@
         });
     }
 
+    function setupAccordions() {
+      document.querySelectorAll('.static-section').forEach(section => {
+        const header = section.querySelector('.accordion-header');
+        const content = section.querySelector('.accordion-content');
+        const toggle = section.querySelector('.accordion-toggle');
+        header.addEventListener('click', () => {
+          const open = content.classList.toggle('open');
+          toggle.classList.toggle('open', open);
+        });
+      });
+    }
+
+    function setupNavLinks() {
+      document.querySelectorAll('footer nav a').forEach(link => {
+        link.addEventListener('click', e => {
+          e.preventDefault();
+          const targetId = link.getAttribute('href').substring(1);
+          const section = document.getElementById(targetId);
+          const content = section.querySelector('.accordion-content');
+          const toggle = section.querySelector('.accordion-toggle');
+          if (!content.classList.contains('open')) {
+            content.classList.add('open');
+            toggle.classList.add('open');
+          }
+          section.scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       init();
       setupButtons();
+      setupAccordions();
+      setupNavLinks();
     });
   </script>
 
