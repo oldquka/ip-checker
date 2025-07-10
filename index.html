@@ -37,7 +37,7 @@
       text-align: center;
       margin-bottom: 10px;
     }
-    #ip-type-text {
+    #ip-type-text, #ip-label {
       font-size: 1.5rem;    /* 24px */
       font-weight: 700;
       color: #84c677;
@@ -184,6 +184,7 @@
     <!-- Sekcija za prikaz IP adrese i tipa -->
     <div id="ip-address">
       <p id="ip-type-text">Your IP type is: <span id="ip-type">Loading...</span></p>
+      <p id="ip-label">Your IP address is:</p>
       <h1 id="ip-value">Loading...</h1>
       <p class="description">This is your public IP address shown for privacy and troubleshooting purposes.</p>
     </div>
@@ -261,7 +262,6 @@
     </footer>
   </div>
 
-  <!-- Skripta za dohvat podataka i rukovanje klikovima i accordionima -->
   <script>
     const DETAILS_URL = 'https://ipapi.co/json/';
 
