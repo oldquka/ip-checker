@@ -22,17 +22,17 @@
       max-width: 1200px;
       width: 90%;
       margin: 0 auto;
-      padding: 20px 0; /* 20px top & bottom */
+      padding: 20px 0;
     }
 
-    /* HEADER – mesto za AdSense oglas */
+    /* Header (AdSense placeholder) */
     header#ad-header {
       width: 100%;
       text-align: center;
       margin-bottom: 20px;
     }
 
-    /* Prikaz IP adrese i tipa */
+    /* IP display & type */
     #ip-address {
       text-align: center;
       margin-bottom: 10px;
@@ -55,13 +55,15 @@
       color: #ffffff;
     }
 
-    /* Dinamički tekst ispod IP */
+    /* Dinamički tekst ispod IP: novi paragrafi */
     #info-output {
       text-align: center;
       font-size: 1rem;
       color: #84c677;
-      min-height: 1.2em;
       margin: 20px 0;
+    }
+    #info-output p {
+      margin-bottom: 8px;   /* mali razmak između tekstova */
     }
 
     /* Dugmad */
@@ -83,6 +85,11 @@
       cursor: pointer;
       flex: 1 0 auto;
       max-width: 200px;
+      transition: opacity 0.2s;
+    }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: default;
     }
 
     /* Statični opisni tekst */
@@ -104,7 +111,7 @@
       font-weight: 700;
     }
 
-    /* Sekcije About, FAQ, Contact */
+    /* About/FAQ/Contact sections */
     section.static-section {
       max-width: 800px;
       margin: 40px auto;
@@ -117,7 +124,7 @@
       margin-bottom: 10px;
     }
 
-    /* Footer navigacija */
+    /* Footer nav */
     footer {
       text-align: center;
       margin: 40px 0 20px;
@@ -157,7 +164,7 @@
       <p class="description">This is your public IP address shown for privacy and troubleshooting purposes.</p>
     </div>
 
-    <!-- Dinamički odgovor dugmadi -->
+    <!-- Dinamički paragrafi ispod IP (po kliku) -->
     <div id="info-output"></div>
 
     <!-- Dugmad -->
@@ -231,7 +238,10 @@
         };
       } catch (err) {
         console.error(err);
-        document.getElementById('info-output').textContent = 'Error loading IP information.';
+        const eo = document.getElementById('info-output');
+        const p = document.createElement('p');
+        p.textContent = 'Error loading IP information.';
+        eo.appendChild(p);
       }
     }
 
@@ -240,8 +250,13 @@
         .addEventListener('click', e => {
           if (!e.target.classList.contains('btn')) return;
           const action = e.target.getAttribute('data-action');
-          document.getElementById('info-output').textContent =
-            window.ipInfo[action] || 'No data available.';
+          const text = window.ipInfo[action] || 'No data available.';
+          const eo = document.getElementById('info-output');
+          const p = document.createElement('p');
+          p.textContent = text;
+          eo.appendChild(p);
+          // disable and grey out this button
+          e.target.disabled = true;
         });
     }
 
