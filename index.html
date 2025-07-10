@@ -32,20 +32,28 @@
       margin-bottom: 20px;
     }
 
-    /* Prikaz IP adrese */
+    /* Prikaz IP adrese i tipa */
     #ip-address {
       text-align: center;
       margin-bottom: 10px;
     }
-    #ip-address p {
-      font-size: 0.9rem;
-      margin-bottom: 4px;
+    /* Uklonili smo browser-info, ostajе samo IP type */
+    #ip-type-text {
+      font-size: 2rem;            /* duplo veće od prosečnog p */
+      font-weight: 700;
+      color: #84c677;
+      margin-bottom: 5px;         /* bliže IP adresi */
     }
     #ip-address h1 {
       font-size: 3rem;
       font-weight: 700;
       color: #84c677;
-      margin: 10px 0;
+      margin: 5px 0;              /* smanjen razmak iznad i ispod */
+    }
+    #ip-address p.description {
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+      color: #ffffff;
     }
 
     /* Tekst nakon klika na dugme */
@@ -143,12 +151,11 @@
       <!-- TODO: PASTE YOUR ADSENSE CODE HERE -->
     </header>
 
-    <!-- Sekcija za prikaz IP adrese i osnovnih informacija -->
+    <!-- Sekcija za prikaz IP adrese i tipa -->
     <div id="ip-address">
-      <p>Your Browser is: <span id="browser-info">Loading...</span></p>
-      <p>Your IP type is: <span id="ip-type">Loading...</span></p>
+      <p id="ip-type-text">Your IP type is: <span id="ip-type">Loading...</span></p>
       <h1 id="ip-value">Loading...</h1>
-      <p>This is your public IP address shown for privacy and troubleshooting purposes.</p>
+      <p class="description">This is your public IP address shown for privacy and troubleshooting purposes.</p>
     </div>
 
     <!-- Mesto za dinamički tekst pri kliku na dugme -->
@@ -217,15 +224,14 @@
         const data = await fetchJson(DETAILS_URL);
 
         // Popuni osnovne podatke
-        document.getElementById('ip-value').textContent     = data.ip;
-        document.getElementById('browser-info').textContent = navigator.userAgent;
-        document.getElementById('ip-type').textContent      = data.version || '';
+        document.getElementById('ip-value').textContent = data.ip;
+        document.getElementById('ip-type').textContent  = data.version || '';
 
         // Sačuvaj podatke za dugmad
         window.ipInfo = {
           location: data.city + ', ' + data.region + ', ' + data.country_name + ' (' + data.country_code + ')',
           isp:      data.org,
-          asn:      data.org.split(' ')[0],  // uzimamo npr. "AS31042"
+          asn:      data.asn,                       // sada uzimamo direktno ASN (npr. "AS15169")
           timezone: data.timezone + ' Local time: ' + new Date().toLocaleString()
         };
       } catch (err) {
