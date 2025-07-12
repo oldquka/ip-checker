@@ -1,6 +1,6 @@
 # robots.txt
 
 User-agent: *
-Disallow:
+Allow: /
 
 Sitemap: https://oldquka.github.io/ip-checker/sitemap.xml
