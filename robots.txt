@@ -3,4 +3,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://ip-checker-al1.pages.dev/sitemap.xml
+Sitemap: https://oldquka.github.io/ip-checker/sitemap.xml
